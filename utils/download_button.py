@@ -92,6 +92,7 @@ def download_button(object_to_download, download_filename, button_text, file_ext
         </style> """
         
     dl_link = custom_css + f'<a download="{download_filename+file_extension}" id="{button_id}" href="data:file/txt;base64,{b64}">{button_text}</a><br></br>'
+    #dl_link = custom_css + f'<a download="{download_filename+file_extension}" id="{button_id}" data:application/octet-stream;base64,{b64}">{button_text}</a><br></br>'
 
     return dl_link
 

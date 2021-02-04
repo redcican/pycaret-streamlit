@@ -36,6 +36,8 @@ def write(state):
                 st.write("SHAP Value is not supported for Adaboost Regressor")
             elif state.transform_target:
                 st.write("SHAP Value is not supported for Model Transform Target")
+            elif state.is_ensemble:
+                st.write("SHAP Value is not supported for Ensemble Model")
             else:
                 is_shap = st.checkbox("Do You Want to Check SHAP Value?", value=False)
                 kernel_regressor = ["CatBoostRegressor","RANSACRegressor","KernelRidge","SVR","KNeighborsRegressor", "MLPRegressor","RandomForestRegressor"]
