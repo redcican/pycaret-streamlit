@@ -68,7 +68,7 @@ def write(state):
                         state.trained_model = create_model(estimator=all_models[select_model], fold=fold, cross_validation=cross_validation)
                     state.log_history["create_model"] = pull(True).to_dict()
 
-                st.write("Show All the Metrics Results After Creating.")
+                st.markdown('<p style="color:#1386fc">Show All the Metrics Results After Tuning.</p>',unsafe_allow_html=True)       
                 button_after_create = st.button("Show Model Result")
                 if button_after_create:
                     with st.spinner("Show All the Results..."):
@@ -109,7 +109,7 @@ def write(state):
                                                 choose_better = choose_better)
                             state.log_history["tuned_models"] = pull(True).to_dict()
 
-                    st.write("Show All the Metrics Results After Tuning.")
+                    st.markdown('<p style="color:#1386fc">Show All the Metrics Results After Tuning.</p>',unsafe_allow_html=True)       
                     button_tuning = st.button("Show Tuning Model Result")
                     if button_tuning:
                         with st.spinner("Show All the Results..."):
@@ -123,7 +123,7 @@ def write(state):
 
                 if ensemble_method == "Ensemble":
                     n_estimators = st.number_input("The number of Base Estimators in the Ensemble", min_value=1, value=10)
-                    button_ensemble = st.button("Training a Ensemble Model")
+                    button_ensemble = st.button("Training an Ensemble Model")
                     if button_ensemble:
                         with st.spinner("Training Ensemble Model"):
                             base = create_model(estimator=all_models[select_model])
@@ -134,7 +134,7 @@ def write(state):
 
                 elif ensemble_method == "Blend":
                     bases = []
-                    button_ensemble = st.button("Training a Ensemble Model")
+                    button_ensemble = st.button("Training an Ensemble Model")
                     if button_ensemble:
                         with st.spinner("Training Blending Model"):
                             for model in select_model_blend:
@@ -147,7 +147,7 @@ def write(state):
 
                 else:
                     restack = st.checkbox("Restack the Predictions for the Meta Model", value=True)
-                    button_ensemble = st.button("Training a Ensemble Model")
+                    button_ensemble = st.button("Training an Ensemble Model")
                     bases = []
                     if button_ensemble:
                         with st.spinner("Training Stacking Model"):
@@ -165,7 +165,7 @@ def write(state):
                                                                  optimize=optimize_ensemble)
                         state.log_history["create_model"] = pull(True).to_dict()
                 
-                st.write("Show All the Metrics Results After Creating.")
+                st.markdown('<p style="color:#1386fc">Show All the Metrics Results After Tuning.</p>',unsafe_allow_html=True)       
                 button_after_create = st.button("Show Model Result")
                 if button_after_create:
                     with st.spinner("Show All the Results..."):

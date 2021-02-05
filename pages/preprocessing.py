@@ -7,6 +7,7 @@ def write(state):
     # select the target column
     if state.df is not None:
         df = state.df
+        
         columns_name = df.columns.tolist()    
         with st.beta_container():
             st.subheader("Select the target variable to make prediction:")
@@ -149,7 +150,7 @@ def write(state):
                 # record the setup procedure
                 state.is_set_up = True
                 
-            st.write("Do you want to check Transformed Data?")
+            st.markdown('<p style="color:#1386fc">Do you want to check Transformed Data?</p>',unsafe_allow_html=True)
             button_transform = st.button("Check Transformed Data")
             if button_transform:
                 with st.spinner("Loading..."):
@@ -164,14 +165,14 @@ def write(state):
                 cross_validation = st.checkbox('Allow Cross Validation or not', value=True)
                 sort = st.selectbox('The Sort Order of the Score Grid', options=['R2','MAE','MSE','RMSE','RMSLE','MAPE'], )
 
-        st.write("Compare All the Machine Learning Models based on selected Metrics.")        
+        st.markdown('<p style="color:#1386fc">Compare All the Machine Learning Models based on selected Metrics.</p>',unsafe_allow_html=True)     
         button_compare = st.button("Compare Models")
         if button_compare:
             with st.spinner('Comparing all Models...'):
                 state.best = compare_models(fold=fold, cross_validation=cross_validation, sort=sort)
                 state.log_history["compare_models"] = pull(True).to_dict()
 
-        st.write("Show All the Metrics Results.")      
+        st.markdown('<p style="color:#1386fc">Show All the Metrics Results.</p>',unsafe_allow_html=True)       
         button_model = st.button("Show All Result")    
         if button_model:
             with st.spinner("Show All the Results..."):

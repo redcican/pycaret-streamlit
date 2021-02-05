@@ -33,11 +33,12 @@ def write(state):
             
             # Adaboost Regressor is not supported
             if model.__class__.__name__ == "AdaBoostRegressor":
-                st.write("SHAP Value is not supported for Adaboost Regressor")
+                st.markdown('<p style="color:#f42756">SHAP Value is not supported for Adaboost Regressor</p>',unsafe_allow_html=True)       
+
             elif state.transform_target:
-                st.write("SHAP Value is not supported for Model Transform Target")
+                st.markdown('<p style="color:#f42756">SHAP Value is not supported for Model Transform Target</p>',unsafe_allow_html=True)       
             elif state.is_ensemble:
-                st.write("SHAP Value is not supported for Ensemble Model")
+                st.markdown('<p style="color:#f42756">SHAP Value is not supported for Ensemble Model</p>',unsafe_allow_html=True)       
             else:
                 is_shap = st.checkbox("Do You Want to Check SHAP Value?", value=False)
                 kernel_regressor = ["CatBoostRegressor","RANSACRegressor","KernelRidge","SVR","KNeighborsRegressor", "MLPRegressor","RandomForestRegressor"]
