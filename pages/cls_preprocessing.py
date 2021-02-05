@@ -1,6 +1,5 @@
-from pycaret.regression import  *
+from pycaret.classification import  *
 import streamlit as st
-import pandas as pd
 from utils.convert_dict_to_df import convert_dict_to_df
 
 def write(state):
@@ -28,11 +27,13 @@ def write(state):
         # training and testing split
         with st.beta_expander("Traning and Testing Split"):
             size = st.number_input('Training Size:', value=0.7)
-        
+            data_split_stratify = st.checkbox("Controls Stratification during Split", value=False)
+            fold_strategy = st.selectbox('Choice of Cross Validation Strategy',options=['kfold','stratifiedkfold','groupkfold'])
+            fold = st.number_input('Number of Folds to be Used in Cross Validation',min_value=2,value=10)
         # Preprocessing
         with st.beta_expander("Preprocessing"):
             with st.beta_container():
-                st.markdown('<p style="color:#f42756">Preprocessing for Numeric Columns:</p>',unsafe_allow_html=True)
+                st.markdown('<p style="color:#1386fc">Preprocessing for Numeric Columns:</p>',unsafe_allow_html=True)
                 numeric_imputation = st.selectbox('Missing Value for Numeric Columns', options=['mean','median'])
                 # select numberical features preprocessing
                 normalize = st.checkbox('Normalization', value=False)
@@ -45,29 +46,28 @@ def write(state):
                 if transformation:
                     transformation_method = st.selectbox('Method for Transfomation', options=['yeo-johnson','quantile'])
                 
-                transform_target = st.checkbox('Apply Transformation to Target Value',value=False)
-                transform_target_method = 'box-cox'
-                if transform_target:
-                    transform_target_method = st.selectbox('Transformation for Target Value', options=['box-cox','yeo-johnson'])    
-                
-                state.transform_target = transform_target
+                fix_imbalance = st.checkbox('Fix Imbalance of Target Classes',value=False)
+                # fix_imbalance_method = None
+                # if fix_imbalance:
+                #     fix_imbalance_method = st.selectbox('Method to Handle Imbalance', options=['SMOTE','fit_resample'])    
+                #     if fix_imbalance_method == 'SMOTE':
+                #         fix_imbalance_method = None
+
                 # select categorical features
                 categorical_columns = df.select_dtypes(include=['category','object']).columns.tolist()
                 categorical_imputation = 'constant'
                 unknown_categorical_method = 'least_frequent'
                 combine_rare_levels = False
                 rare_level_threshold = 0.1
-                # fix_imbalance = False
                 
                 if len(categorical_columns) > 0:
-                    st.markdown('<p style="color:#f42756">Preprocessing for Categorical Columns:</p>',unsafe_allow_html=True)
+                    st.markdown('<p style="color:#1386fc">Preprocessing for Categorical Columns:</p>',unsafe_allow_html=True)
                     with st.beta_container():
                         categorical_imputation = st.selectbox('Missing Values for Categorical', options=['constant','mode'])
                         unknown_categorical_method = st.selectbox('Handle Unknown Categorical values', options=['least_frequent','most_frequent'])
                         combine_rare_levels = st.checkbox('Combined Rare Levels of Categorical Features as a Single Level',value=False)
                         if combine_rare_levels:
                             rare_level_threshold = st.number_input('Percentile Distribution below Rare Categories are Combined',min_value=0.0,value=0.1)
-                        # fix_imbalance = st.checkbox('Fix Unequal Distribution of Target class', value=False)
                     
         # Feature Engineering
         with st.beta_expander("Creating New Features through Features Engineering"):
@@ -103,6 +103,8 @@ def write(state):
                 if remove_multicollinearity:
                     multicollinearity_threshold = st.number_input('Threshold Used for Dropping the Correlated Features', min_value=0.0, value=0.9)
                 
+                remove_perfect_collinearity = st.checkbox('Remove Perfect Collinearity (Correaltion=1) Feature', value=False)
+                
                 pca = st.checkbox('Used PCA to Reduce the Dimensionality of the Dataset', value=False)
                 pca_method='linear'
                 pca_components = 0.99
@@ -133,8 +135,8 @@ def write(state):
                     setup(data=df, target=target_column,train_size=size, preprocess=True,
                     categorical_imputation=categorical_imputation, numeric_imputation=numeric_imputation,
                     normalize=normalize,normalize_method=normalize_method, transformation=transformation,
-                    transformation_method=transformation_method, transform_target=transform_target,
-                    transform_target_method=transform_target_method,unknown_categorical_method=unknown_categorical_method,
+                    transformation_method=transformation_method, 
+                    unknown_categorical_method=unknown_categorical_method,
                     combine_rare_levels=combine_rare_levels,rare_level_threshold=rare_level_threshold,
                     feature_interaction=feature_interaction,ignore_features=remove_columns,
                     feature_ratio=feature_ratio,polynomial_features=polynomial_features,
@@ -142,7 +144,11 @@ def write(state):
                     trigonometry_features=trigonometry_features,group_features=group_features,
                     bin_numeric_features=bin_numeric_features,feature_selection=feature_selection,
                     feature_selection_threshold=feature_selection_threshold,remove_multicollinearity=remove_multicollinearity,
-                    multicollinearity_threshold = multicollinearity_threshold,pca=pca,pca_method=pca_method,pca_components=pca_components,
+                    multicollinearity_threshold = multicollinearity_threshold,           
+                    remove_perfect_collinearity=remove_perfect_collinearity,
+                    fix_imbalance = fix_imbalance, 
+                    data_split_stratify=data_split_stratify,fold_strategy=fold_strategy,fold=fold,
+                    pca=pca,pca_method=pca_method,pca_components=pca_components,
                     ignore_low_variance=ignore_low_variance,create_clusters=create_clusters,cluster_iter=cluster_iter,
                     remove_outliers=remove_outliers,outliers_threshold=outliers_threshold,html=False,silent=True)
 
@@ -160,16 +166,16 @@ def write(state):
         with st.beta_expander("Select Parameters for Comparing Models"):
             with st.beta_container():
                 fold_text = st.text_input('Control Cross Validation Folds (int or None)', value='None')
-                fold = None if fold_text == 'None' else int(fold_text)
+                fold_compare = None if fold_text == 'None' else int(fold_text)
 
                 cross_validation = st.checkbox('Allow Cross Validation or not', value=True)
-                sort = st.selectbox('The Sort Order of the Score Grid', options=['R2','MAE','MSE','RMSE','RMSLE','MAPE'], )
+                sort = st.selectbox('The Sort Order of the Score Grid', options=['Accuracy', 'AUC', 'Recall', 'Precision', 'F1', 'Kappa', 'MCC'], )
 
         st.markdown('<p style="color:#1386fc">Compare All the Machine Learning Models based on selected Metrics.</p>',unsafe_allow_html=True)     
         button_compare = st.button("Compare Models")
         if button_compare:
             with st.spinner('Comparing all Models...'):
-                state.best = compare_models(fold=fold, cross_validation=cross_validation, sort=sort)
+                state.best = compare_models(include=["nb","svm","rbfsvm"],fold=fold_compare, cross_validation=cross_validation, sort=sort)
                 state.log_history["compare_models"] = pull(True).to_dict()
 
         st.markdown('<p style="color:#1386fc">Show All the Metrics Results.</p>',unsafe_allow_html=True)       

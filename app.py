@@ -1,13 +1,14 @@
 import streamlit as st
 from PIL import Image
-from pages import home,data_info, preprocessing,prediction, training, model_analysis
+from pages import (home,data_info, reg_preprocessing,prediction, reg_training, 
+                   model_analysis,cls_preprocessing,cls_training)
 from utils.session import _get_state
     
 PAGES = {
     "Home": home,
     "DataInfo": data_info,
-    "Preprocessing": preprocessing,
-    "Training" : training,
+    "Preprocessing": (reg_preprocessing,cls_preprocessing),
+    "Training" : (reg_training, cls_training),
     "ModelAnalysis": model_analysis,
     "Prediction and Save": prediction,
 }
@@ -30,14 +31,26 @@ def run():
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
 
     if selection == "Home":
-        state_df = PAGES[selection].write(state)
-        state.df = state_df
+        try:
+            state_df,task = PAGES[selection].write(state)
+            state.df, state.task = state_df,task
+        except:
+            st.header("Please Upload Csv or Excel File first!")
+            st.stop()
     if selection == "DataInfo":
         PAGES[selection].write(state.df)
+    
     if selection == "Preprocessing":
-        PAGES[selection].write(state)
+        if state.task == "Regression":
+            PAGES[selection][0].write(state)
+        else:
+            PAGES[selection][1].write(state)
+
     if selection == "Training":
-        PAGES[selection].write(state)
+        if state.task == "Regression":
+            PAGES[selection][0].write(state)
+        else:
+            PAGES[selection][1].write(state)
     if selection == "ModelAnalysis":
         PAGES[selection].write(state)
     if selection == "Prediction and Save":
