@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 from pages import (home,data_info, reg_preprocessing,prediction, reg_training, 
-                   model_analysis,cls_preprocessing,cls_training)
+                   reg_model_analysis,cls_preprocessing,cls_training,cls_model_analysis)
 from utils.session import _get_state
     
 PAGES = {
@@ -9,7 +9,7 @@ PAGES = {
     "DataInfo": data_info,
     "Preprocessing": (reg_preprocessing,cls_preprocessing),
     "Training" : (reg_training, cls_training),
-    "ModelAnalysis": model_analysis,
+    "ModelAnalysis": (reg_model_analysis, cls_model_analysis),
     "Prediction and Save": prediction,
 }
 
@@ -52,7 +52,10 @@ def run():
         else:
             PAGES[selection][1].write(state)
     if selection == "ModelAnalysis":
-        PAGES[selection].write(state)
+        if state.task == "Regression":
+            PAGES[selection][0].write(state)
+        else:
+            PAGES[selection][1].write(state)
     if selection == "Prediction and Save":
         PAGES[selection].write(state)
     st.write(state.__dict__)

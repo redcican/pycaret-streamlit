@@ -1,7 +1,7 @@
 import streamlit as st
 from pycaret.regression import *
 from utils.plot_regression import get_plotly_act_vs_predict
-from utils.plot_shap import plot_shap_global_and_local
+from utils.plot_shap import plot_reg_shap_global_and_local
 
 
 def write(state):
@@ -29,19 +29,17 @@ def write(state):
                 # plot all pycaret support diagrams
                 plot = st.selectbox('Select a Plot', options=['residuals','error','cooks','rfe','learning','vc','manifold'])
                 plot_model(estimator=model, plot=plot, display_format='streamlit')
-            
-            
-            # Adaboost Regressor is not supported
-            if model.__class__.__name__ == "AdaBoostRegressor":
-                st.markdown('<p style="color:#f42756">SHAP Value is not supported for Adaboost Regressor</p>',unsafe_allow_html=True)       
+                 
 
-            elif state.transform_target:
+            if state.transform_target:
                 st.markdown('<p style="color:#f42756">SHAP Value is not supported for Model Transform Target</p>',unsafe_allow_html=True)       
             elif state.is_ensemble:
                 st.markdown('<p style="color:#f42756">SHAP Value is not supported for Ensemble Model</p>',unsafe_allow_html=True)       
             else:
                 is_shap = st.checkbox("Do You Want to Check SHAP Value?", value=False)
-                kernel_regressor = ["CatBoostRegressor","RANSACRegressor","KernelRidge","SVR","KNeighborsRegressor", "MLPRegressor","RandomForestRegressor"]
+                kernel_regressor = ["CatBoostRegressor","RANSACRegressor","KernelRidge","SVR",
+                                    "KNeighborsRegressor", "MLPRegressor","RandomForestRegressor",
+                                    "AdaBoostRegressor"]
                 if is_shap:
                     if model.__class__.__name__ in kernel_regressor: 
                         options = ['default','bar','violin']
@@ -51,7 +49,7 @@ def write(state):
                         with st.beta_expander("Interpret the Model with Global SHAP Value"):
                             plot_type = st.selectbox('Select a Type of Plot', options=options)
                             max_display = st.slider('Maximum Number to Display', min_value=1, max_value=X_train.shape[1],value=10,key=1)
-                            plot_shap_global_and_local('global',model, X_train, plot_type, max_display)
+                            plot_reg_shap_global_and_local('global',model, X_train, plot_type, max_display)
                             
                             
                         with st.beta_expander("Interpret the Model with Local SHAP Value"):
@@ -61,7 +59,7 @@ def write(state):
                                 max_display_local = st.slider('Maximum Number to Display', min_value=1, max_value=X_train.shape[1],value=10,key=2)
                             
                             index_of_explain = st.number_input('Index to Explain from Prediction',min_value=0,max_value=X_train.shape[0],value=0)
-                            plot_shap_global_and_local('local',model,X_train,None,max_display_local,index_of_explain)
+                            plot_reg_shap_global_and_local('local',model,X_train,None,max_display_local,index_of_explain)
 
 
 

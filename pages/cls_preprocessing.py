@@ -155,13 +155,16 @@ def write(state):
                 state.log_history = {"setup":pull(True).data.to_dict()} 
                 # record the setup procedure
                 state.is_set_up = True
+                state.classification_task = list(state.log_history["setup"]["Value"].values())[2]
+                # st.write(state.classification_task[2])
                 
             st.markdown('<p style="color:#1386fc">Do you want to check Transformed Data?</p>',unsafe_allow_html=True)
             button_transform = st.button("Check Transformed Data")
             if button_transform:
                 with st.spinner("Loading..."):
                     st.write(convert_dict_to_df(state.log_history["setup"]))
-        
+                    
+            
         st.subheader("Compare All the Machine Learning Model Result:")
         with st.beta_expander("Select Parameters for Comparing Models"):
             with st.beta_container():
@@ -175,7 +178,7 @@ def write(state):
         button_compare = st.button("Compare Models")
         if button_compare:
             with st.spinner('Comparing all Models...'):
-                state.best = compare_models(include=["nb","svm","rbfsvm"],fold=fold_compare, cross_validation=cross_validation, sort=sort)
+                state.best = compare_models(fold=fold_compare, cross_validation=cross_validation, sort=sort)
                 state.log_history["compare_models"] = pull(True).to_dict()
 
         st.markdown('<p style="color:#1386fc">Show All the Metrics Results.</p>',unsafe_allow_html=True)       

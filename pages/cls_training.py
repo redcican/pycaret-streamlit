@@ -18,7 +18,7 @@ def write(state):
         select_model_blend = []
         select_model_stack_first = []
         select_model_stack_seconnd = ""
-        st.write(state.best.__class__.__name__)
+
         if state.best is not None:
             train_options = ["From Best", "Single Model", "Ensemble Model"]
             best_name = state.best.__class__.__name__
