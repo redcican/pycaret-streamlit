@@ -9,9 +9,11 @@ def write(state):
     if state.is_set_up:
     
         all_models = retrieve_models_name(is_regression=False)
-        st.write(all_models)
+        # st.write(all_models)
         select_model = None 
         select_model_names = list(all_models.keys())
+        select_model_names.remove('ExtremeGradientBoosting')
+        
         best_name = ""
         ensemble_method =""
         select_ensemble_method = ""

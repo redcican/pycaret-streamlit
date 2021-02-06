@@ -2,6 +2,7 @@ import streamlit as st
 from utils.retrieve_models_name import retrieve_models_name
 from utils.convert_dict_to_df import convert_dict_to_df
 from pycaret.regression import *
+from utils.st_xgboost import train_xgboost_regression
 
 def write(state):
     st.subheader("Create Model from Best Result or Select Single Model or Ensemble?")
@@ -12,6 +13,8 @@ def write(state):
 
         select_model = None 
         select_model_names = list(all_models.keys())
+        select_model_names.remove('ExtremeGradientBoosting')
+
         best_name = ""
         ensemble_method =""
         select_ensemble_method = ""

@@ -32,7 +32,7 @@ def write(state):
                 if st.button("Predict"):
                     output = predict(trained_model, input_df)
                     output = str(output)
-                    st.success(f'The Elongation is **{output}**')
+                    st.success(f'The Prediction is **{output}**')
         if add_selectbox == 'Batch':
             file_upload = st.file_uploader('Upload csv file for prediciton', type=["csv"])
             if file_upload is not None:
