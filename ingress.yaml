@@ -1,12 +1,12 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
- name: eidodata-streamlit
+ name: eidodata
  annotations:
    kubernetes.io/ingress.global-static-ip-name: streamlitweb-ip
    networking.gke.io/managed-certificates: streamlit-certificate
  labels:
-   app: eidodata-streamlit
+   app: eidodata
 spec:
  backend:
    serviceName: streamlitweb-backend
@@ -17,11 +17,11 @@ kind: Service
 metadata:
  name: streamlitweb-backend
  labels:
-   app: eidodata-streamlit
+   app: eidodata
 spec:
  type: NodePort
  selector:
-   app: eidodata-streamlit
+   app: eidodata
    tier: web
  ports:
  - port: 8501

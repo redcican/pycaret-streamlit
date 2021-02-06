@@ -1,7 +1,7 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
- name: eidodata-streamlit-certificate
+ name: eidodata-certificate
 spec:
  domains:
    - eidodata.de

@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: eidodata-streamlit
+ name: eidodata
  labels:
-   app: eidodata-streamlit
+   app: eidodata
 spec:
  selector:
    matchLabels:
-     app: eidodata-streamlit
+     app: eidodata
      tier: web
  template:
    metadata:
      labels:
-       app: eidodata-streamlit
+       app: eidodata
        tier: web
    spec:
      containers:
-     - name: eidodata-streamlit
-       image: gcr.io/streamlit-292317/eidodata-streamlit:v1
+     - name: eidodata
+       image: gcr.io/streamlit-292317/eidodata:v1
        ports:
        - containerPort: 8501
