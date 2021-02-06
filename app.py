@@ -3,6 +3,8 @@ from PIL import Image
 from pages import (home,data_info, reg_preprocessing,prediction, reg_training, 
                    reg_model_analysis,cls_preprocessing,cls_training,cls_model_analysis)
 from utils.session import _get_state
+from pathlib import Path
+
     
 PAGES = {
     "Home": home,
@@ -13,16 +15,18 @@ PAGES = {
     "Prediction and Save": prediction,
 }
 
-def load_image():
-    image_eido = Image.open('EIDOlogo.png')
-    st.sidebar.image(image_eido, use_column_width=True)
+IMAGE_FOLDER = Path("images/")
 
+def load_image():
+    image_eido = Image.open(IMAGE_FOLDER/'EIDOlogo.png')
+    st.sidebar.image(image_eido, use_column_width=True)
     
+
 def run():
     state = _get_state()
     st.set_page_config(
         page_title="EidoData App",
-        page_icon='icons.ico',
+        page_icon=':shark:',
         layout="centered",
         initial_sidebar_state='expanded'
     )
