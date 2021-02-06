@@ -28,7 +28,10 @@ def write(state):
             with st.beta_expander("Show Training Performance Plots"):
                 # plot all pycaret support diagrams
                 plot = st.selectbox('Select a Plot', options=['residuals','error','cooks','rfe','learning','vc','manifold'])
-                plot_model(estimator=model, plot=plot, display_format='streamlit')
+                try:     
+                    plot_model(estimator=model, plot=plot, display_format='streamlit')
+                except:
+                    st.error("Plot Not Available for multiclass problems.")    
                  
 
             if state.transform_target:
@@ -38,7 +41,7 @@ def write(state):
             else:
                 is_shap = st.checkbox("Do You Want to Check SHAP Value?", value=False)
                 kernel_regressor = ["CatBoostRegressor","RANSACRegressor","KernelRidge","SVR",
-                                    "KNeighborsRegressor", "MLPRegressor","RandomForestRegressor",
+                                    "KNeighborsRegressor", "MLPRegressor",
                                     "AdaBoostRegressor"]
                 if is_shap:
                     if model.__class__.__name__ in kernel_regressor: 
@@ -49,8 +52,11 @@ def write(state):
                         with st.beta_expander("Interpret the Model with Global SHAP Value"):
                             plot_type = st.selectbox('Select a Type of Plot', options=options)
                             max_display = st.slider('Maximum Number to Display', min_value=1, max_value=X_train.shape[1],value=10,key=1)
-                            plot_reg_shap_global_and_local('global',model, X_train, plot_type, max_display)
-                            
+                            try:
+                                plot_reg_shap_global_and_local('global',model, X_train, plot_type, max_display)
+                            except:
+                                st.error("Plot Not Available for the Model.")    
+
                             
                         with st.beta_expander("Interpret the Model with Local SHAP Value"):
                             if model.__class__.__name__ in kernel_regressor: 
@@ -59,8 +65,10 @@ def write(state):
                                 max_display_local = st.slider('Maximum Number to Display', min_value=1, max_value=X_train.shape[1],value=10,key=2)
                             
                             index_of_explain = st.number_input('Index to Explain from Prediction',min_value=0,max_value=X_train.shape[0],value=0)
-                            plot_reg_shap_global_and_local('local',model,X_train,None,max_display_local,index_of_explain)
-
+                            try:
+                                plot_reg_shap_global_and_local('local',model,X_train,None,max_display_local,index_of_explain)
+                            except:
+                                st.error("Plot Not Available for the Model.")    
 
 
         return state

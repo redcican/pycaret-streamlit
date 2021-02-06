@@ -26,12 +26,13 @@ def plot_reg_shap_global_and_local(shap_plot_type:str, model:object,  X_train, p
     explainer, shap_values, sample_values = get_reg_shap_explainer_global_and_local(model, X_train)
     fig, ax = plt.subplots(nrows=1, ncols=1)
     
-    if model.__class__.__name__ == "CatBoostRegressor" or model.__class__.__name__ == "RandomForestRegressor":       
+    if model.__class__.__name__ == "CatBoostRegressor":       
         if shap_plot_type == "global":
             if plot_type == "default":
                 plot_type=None
             shap.summary_plot(shap_values, X_train, plot_type=plot_type,show=False)
         else:
+            plt.clf()
             st_shap(shap.force_plot(explainer.expected_value, shap_values[index_of_explain,:],
                                     X_train.iloc[index_of_explain,:]))
             
@@ -46,6 +47,7 @@ def plot_reg_shap_global_and_local(shap_plot_type:str, model:object,  X_train, p
                     plot_type=None
                 shap.summary_plot(shap_values, sample_values,plot_type=plot_type,show=False)
             else:
+                plt.clf()
                 st_shap(shap.force_plot(explainer.expected_value, shap_values[index_of_explain],
                                         sample_values.iloc[index_of_explain]))
             
@@ -108,8 +110,7 @@ def get_reg_shap_explainer_global_and_local(model: object, X_train):
     """
     sample_values = None
     
-    if model.__class__.__name__ == "CatBoostRegressor" \
-        or model.__class__.__name__ == "RandomForestRegressor": 
+    if model.__class__.__name__ == "CatBoostRegressor": 
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(X_train)
     elif model.__class__.__name__ == "RANSACRegressor" \
@@ -193,27 +194,41 @@ def plot_cls_shap_global_and_local(shap_plot_type:str, model:object,  X_train, t
     
     if task_type == 'Binary':
         
-        if model.__class__.__name__ == "CatBoostRegressor" or model.__class__.__name__ == "RandomForestRegressor":       
+        if model.__class__.__name__ == "ExtraTreesClassifier" \
+            or model.__class__.__name__ == "CatBoostClassifier" \
+            or model.__class__.__name__ == "RandomForestClassifier" \
+            or model.__class__.__name__ == "DecisionTreeClassifier":     
+                
             if shap_plot_type == "global":
                 if plot_type == "default":
                     plot_type=None
-                shap.summary_plot(shap_values, X_train, plot_type=plot_type,show=False)
-            else:
-                st_shap(shap.force_plot(explainer.expected_value, shap_values[index_of_explain,:],
-                                        X_train.iloc[index_of_explain,:]))
-            
-        elif model.__class__.__name__ == "RANSACRegressor" \
-            or model.__class__.__name__ == "KernelRidge" \
-            or model.__class__.__name__ == "SVR" \
-            or model.__class__.__name__ == "MLPRegressor" \
-            or model.__class__.__name__ == "KNeighborsRegressor" \
-            or model.__class__.__name__ == "AdaBoostRegressor":
-                if shap_plot_type == "global":
-                    if plot_type == "default":
-                        plot_type=None
-                    shap.summary_plot(shap_values, sample_values,plot_type=plot_type,show=False)
+                # only catboost classifier support 'bar','default' and 'violin'
+                if model.__class__.__name__ == "CatBoostClassifier":
+                    shap.summary_plot(shap_values, X_train, plot_type=plot_type,show=False)
                 else:
-                    st_shap(shap.force_plot(explainer.expected_value, shap_values[index_of_explain],
+                    shap.summary_plot(shap_values, X_train, plot_type=None,show=False)
+            else:
+                if model.__class__.__name__ == "CatBoostClassifier":
+                    st_shap(shap.force_plot(explainer.expected_value, shap_values[index_of_explain,:],
+                                            X_train.iloc[index_of_explain,:]))
+                else:
+                    plt.clf()
+                    st_shap(shap.force_plot(explainer.expected_value[index_of_explain], shap_values[index_of_explain],
+                                            X_train),height=1000)
+            
+        elif model.__class__.__name__ == "KNeighborsClassifier" \
+            or model.__class__.__name__ == "AdaBoostClassifier" \
+            or model.__class__.__name__ == "QuadraticDiscriminantAnalysis" \
+            or model.__class__.__name__ == "NaiveBayes" \
+            or model.__class__.__name__ == "GaussianProcessClassifier" \
+            or model.__class__.__name__ == "MLPClassifier":
+            if shap_plot_type == "global":
+                if plot_type == "default":
+                    plot_type=None
+                shap.summary_plot(shap_values, sample_values,plot_type=plot_type,show=False)
+            else:
+                plt.clf()
+                st_shap(shap.force_plot(explainer.expected_value, shap_values[index_of_explain],
                                             sample_values.iloc[index_of_explain]))
                 
         else:
@@ -226,6 +241,29 @@ def plot_cls_shap_global_and_local(shap_plot_type:str, model:object,  X_train, t
                     shap.plots.heatmap(shap_values, max_display=max_display)
             elif shap_plot_type == "local":
                 shap.plots.waterfall(shap_values[index_of_explain],max_display=max_display,show=False) 
-
+    else:
+        if model.__class__.__name__ == "ExtraTreesClassifier" \
+            or model.__class__.__name__ == "CatBoostClassifier" \
+            or model.__class__.__name__ == "RandomForestClassifier" \
+            or model.__class__.__name__ == "DecisionTreeClassifier" \
+            or model.__class__.__name__ == "ExtremeGradientBoosting" \
+            or model.__class__.__name__ == "LightGradientBoostingMachine":
+                if shap_plot_type == "global":
+                    shap.summary_plot(shap_values, X_train,plot_type=None,show=False)
+                else:
+                    plt.clf()
+                    st_shap(shap.force_plot(explainer.expected_value[index_of_explain], shap_values[index_of_explain],
+                                            X_train),height=1000)    
+        else:
+            if shap_plot_type == "global":
+                if plot_type == "default":
+                    plot_type=None
+                shap.summary_plot(shap_values, sample_values,plot_type=plot_type,show=False)
+            else:
+                plt.clf()
+                st_shap(shap.force_plot(explainer.expected_value, shap_values[index_of_explain],
+                                            sample_values.iloc[index_of_explain]))
+                            
+                   
     return st.pyplot(fig)
 

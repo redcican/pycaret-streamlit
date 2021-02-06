@@ -160,9 +160,12 @@ def write(state):
                 
             st.markdown('<p style="color:#1386fc">Do you want to check Transformed Data?</p>',unsafe_allow_html=True)
             button_transform = st.button("Check Transformed Data")
-            if button_transform:
-                with st.spinner("Loading..."):
-                    st.write(convert_dict_to_df(state.log_history["setup"]))
+            try:
+                if button_transform:
+                    with st.spinner("Loading..."):
+                        st.write(convert_dict_to_df(state.log_history["setup"]))
+            except:
+                st.error("Please Process and Transform Data first!")
                     
             
         st.subheader("Compare All the Machine Learning Model Result:")
@@ -176,16 +179,22 @@ def write(state):
 
         st.markdown('<p style="color:#1386fc">Compare All the Machine Learning Models based on selected Metrics.</p>',unsafe_allow_html=True)     
         button_compare = st.button("Compare Models")
-        if button_compare:
-            with st.spinner('Comparing all Models...'):
-                state.best = compare_models(fold=fold_compare, cross_validation=cross_validation, sort=sort)
-                state.log_history["compare_models"] = pull(True).to_dict()
+        try:
+            if button_compare:
+                with st.spinner('Comparing all Models...'):
+                    state.best = compare_models(fold=fold_compare, cross_validation=cross_validation, sort=sort)
+                    state.log_history["compare_models"] = pull(True).to_dict()
+        except:
+            st.error("Please Process and Transform Data first!")
 
         st.markdown('<p style="color:#1386fc">Show All the Metrics Results.</p>',unsafe_allow_html=True)       
-        button_model = st.button("Show All Result")    
-        if button_model:
-            with st.spinner("Show All the Results..."):
-                st.write(convert_dict_to_df(state.log_history["compare_models"]))
+        button_model = st.button("Show All Result")  
+        try:  
+            if button_model:
+                with st.spinner("Show All the Results..."):
+                    st.write(convert_dict_to_df(state.log_history["compare_models"]))
+        except:
+            st.error("Please Compare All Models first!")
         
 
         return state

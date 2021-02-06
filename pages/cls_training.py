@@ -62,16 +62,22 @@ def write(state):
                 cross_validation = st.checkbox('Allow Cross Validation or not', value=True)
 
                 button_create = st.button('Training a Single Model')
-                if button_create:
-                    with st.spinner("Training Model..."):
-                        state.trained_model = create_model(estimator=all_models[select_model], fold=fold, cross_validation=cross_validation)
-                    state.log_history["create_model"] = pull(True).to_dict()
+                try:
+                    if button_create:
+                        with st.spinner("Training Model..."):
+                            state.trained_model = create_model(estimator=all_models[select_model], fold=fold, cross_validation=cross_validation)
+                        state.log_history["create_model"] = pull(True).to_dict()
+                except:
+                    st.error("Please Set Up Dataset first!")           
 
                 st.markdown('<p style="color:#1386fc">Show All the Metrics Results After Tuning.</p>',unsafe_allow_html=True)       
                 button_after_create = st.button("Show Model Result")
-                if button_after_create:
-                    with st.spinner("Show All the Results..."):
-                        st.write(convert_dict_to_df(state.log_history["create_model"]))
+                try:
+                    if button_after_create:
+                        with st.spinner("Show All the Results..."):
+                            st.write(convert_dict_to_df(state.log_history["create_model"]))
+                except:
+                    st.error("Please Train a Model first!")
 
                 is_tuning = st.checkbox("Do You want to Tune the Hyperparemters?", value=False)
                 if is_tuning:
