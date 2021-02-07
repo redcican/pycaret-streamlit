@@ -30,7 +30,7 @@ steps:
   - '-t'
   - 'gcr.io/$PROJECT_ID/eidodata-cloudbuild:$SHORT_SHA'
   - '.'
-  timeout: 1000000s
+  timeout: 24h0m0s
 
 
 # This step pushes the image to Container Registry
@@ -41,7 +41,7 @@ steps:
   args:
   - 'push'
   - 'gcr.io/$PROJECT_ID/eidodata-cloudbuild:$SHORT_SHA'
-  timeout: 1000000s
+  timeout: 24h0m0s
 # [END cloudbuild]
 
 # [START cloudbuild-trigger-cd]
