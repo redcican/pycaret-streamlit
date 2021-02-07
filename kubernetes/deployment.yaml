@@ -1,26 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: eidodata
-  name: eidodata
-  namespace: default
+ name: eidodata
+ labels:
+   app: eidodata
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: eidodata
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: eidodata
-    spec:
-      containers:
-        - image: gcr.io/streamlit-292317/github_redcican_pycaret-eidodata
-          imagePullPolicy: IfNotPresent
-          name: pycaret-eidodata-1
+ selector:
+   matchLabels:
+     app: eidodata
+     tier: web
+ template:
+   metadata:
+     labels:
+       app: eidodata
+       tier: web
+   spec:
+     containers:
+     - name: eidodata
+       image: gcr.io/streamlit-292317/eidodata:v1
+       ports:
+       - containerPort: 8501

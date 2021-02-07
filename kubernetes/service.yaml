@@ -1,23 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    cloud.google.com/neg: '{"ingress":true}'
-  finalizers:
-    - service.kubernetes.io/load-balancer-cleanup
-  labels:
-    app: eidodata
-  name: eidodata-service
-  namespace: default
+ name: streamlitweb-backend
+ labels:
+   app: eidodata
 spec:
-  clusterIP: 10.56.14.116
-  externalTrafficPolicy: Cluster
-  ports:
-    - nodePort: 31050
-      port: 80
-      protocol: TCP
-      targetPort: 8501
-  selector:
-    app: eidodata
-  sessionAffinity: None
-  type: LoadBalancer
+ type: LoadBalancer
+ selector:
+   app: eidodata
+   tier: web
+ ports:
+ - port: 80
+   targetPort: 8501
