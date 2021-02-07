@@ -3,14 +3,13 @@ kind: Deployment
 metadata:
   labels:
     app: eidodata
-  name: eidodataweb
+  name: eidodata
   namespace: default
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: eidodata
-      tier: web
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,12 +19,8 @@ spec:
     metadata:
       labels:
         app: eidodata
-        tier: web
     spec:
       containers:
         - image: gcr.io/streamlit-292317/github_redcican_pycaret-eidodata
           imagePullPolicy: IfNotPresent
-          name: eidodata-app
-          ports:
-            - containerPort: 80
-              protocol: TCP
+          name: pycaret-eidodata-1
