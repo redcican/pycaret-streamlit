@@ -1,2 +1,2 @@
 # EidoData Web Application
-![](images/EIDOlogo.png
+![](images/EIDOlogo.png)
