@@ -37,3 +37,25 @@ machine learning:
   * Online Prediction
   * Batch Prediction
   * Save whole Machine Learning Pipeline as pickle file
+
+****
+## Install and Run
+1. Clione the repository to you computer:
+```shell script 
+git clone https://github.com/redcican/pycaret-eidodata.git
+cd pycaret-eidodata
+```
+2. Creata a conda virtual or python virtual environment and then activate it.
+```shell script
+conda create -n myvirtual-name python=3.8 -y
+conda activate myvirtual-name
+```
+3. Install requirements
+```shell script
+pip install -r requirements.txt
+```
+
+4. Run streamlit locally and start web service:
+```shell script
+streamlit run app.py
+```
