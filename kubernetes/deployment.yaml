@@ -17,6 +17,6 @@ spec:
    spec:
      containers:
      - name: eidodata
-       image: gcr.io/streamlit-292317/pycaret-eidodata:$COMMIT_SHA
+       image: gcr.io/streamlit-292317/eido-data:v1
        ports:
        - containerPort: 8501
