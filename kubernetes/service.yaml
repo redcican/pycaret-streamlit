@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+  labels:
+    app: eidodata
+  name: eidodataweb-service
+  namespace: default
+spec:
+  clusterIP: 10.99.245.130
+  externalTrafficPolicy: Cluster
+  ports:
+    - nodePort: 31050
+      port: 80
+      protocol: TCP
+      targetPort: 8501
+  selector:
+    app: eidodata
+    tier: web
+  sessionAffinity: None
+  type: LoadBalancer
