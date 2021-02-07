@@ -30,6 +30,7 @@ steps:
   - '-t'
   - 'gcr.io/$PROJECT_ID/eidodata-cloudbuild:$SHORT_SHA'
   - '.'
+  timeout: 1000000s
 
 # This step pushes the image to Container Registry
 # The PROJECT_ID and SHORT_SHA variables are automatically
@@ -39,4 +40,5 @@ steps:
   args:
   - 'push'
   - 'gcr.io/$PROJECT_ID/eidodata-cloudbuild:$SHORT_SHA'
+  timeout: 1000000s
 # [END cloudbuild]
