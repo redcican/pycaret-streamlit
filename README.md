@@ -16,12 +16,12 @@ machine learning:
 2. Simple Data Exploration.
 
 3. Many Preprocessing methods:
-  * Sample and Split
-  * Data Preprocessing (Missing Values Imputation, One Hot Encoding, Handle Unknown Levels, Fix Imbalance for Classification)
-  * Scale and Transform (Normalization, Transformation, Target Transformation)
-  * Feature Engineering (Feature Interaction, Polynomial Features, Trigonometry Features, Group Features, Bin Numeric Features, Combine Rare Levels)
-  * Feature Selection (Feature Importance, Remove Multicollinearity, Principal Components Analysis, Ignore Variances)
-  * Unsupervised (Create Clusters, Remove Outliers)
+     * Sample and Split
+     * Data Preprocessing (Missing Values Imputation, One Hot Encoding, Handle Unknown Levels, Fix Imbalance for Classification)
+     * Scale and Transform (Normalization, Transformation, Target Transformation)
+     * Feature Engineering (Feature Interaction, Polynomial Features, Trigonometry Features, Group Features, Bin Numeric Features, Combine Rare Levels)
+     * Feature Selection (Feature Importance, Remove Multicollinearity, Principal Components Analysis, Ignore Variances)
+     * Unsupervised (Create Clusters, Remove Outliers)
 
 4. Model Training:
    * Compare all available Machine Learning Algorithm automatically.
@@ -34,9 +34,10 @@ machine learning:
    * SHAP Value
 
 6. Prediction and Save Model:
-  * Online Prediction
-  * Batch Prediction
-  * Save whole Machine Learning Pipeline as pickle file
+   
+   * Online Prediction  
+   * Batch Prediction  
+   * Save whole Machine Learning Pipeline as pickle file
 
 ****
 ## Install and Run
