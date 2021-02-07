@@ -85,10 +85,12 @@ def write(state):
                 trigonometry_features = st.checkbox('Create new Features based on all Trigonometric', value=False)
                 group_features = st.multiselect('Select Features that have Related Characteristics',feature_columns)
                 group_features = group_features if len(group_features) > 0 else None
-                bin_numeric_features = None
-                bin_numeric_features = st.multiselect('Select Numeric Features Transformed into Categorical Features using K-Means',
+                bin_numeric_features = st.checkbox('Create new Features based on Bin Combinations', value=False)
+                select_bin_numeric_features=None
+                if bin_numeric_features:
+                    select_bin_numeric_features = st.multiselect('Select Numeric Features Transformed into Categorical Features using K-Means',
                                                     feature_columns)
-                bin_numeric_features = bin_numeric_features if len(bin_numeric_features) > 0 else None
+                # bin_numeric_features = bin_numeric_features if len(bin_numeric_features) > 0 else None
                 
         # Feature Selection
         with st.beta_expander("Select Features in Dataset Contributes the most in Predicting Target Variable"):
@@ -143,7 +145,7 @@ def write(state):
                     feature_ratio=feature_ratio,polynomial_features=polynomial_features,
                     polynomial_degree=polynomial_degree,polynomial_threshold=polynomial_threshold,
                     trigonometry_features=trigonometry_features,group_features=group_features,
-                    bin_numeric_features=bin_numeric_features,feature_selection=feature_selection,
+                    bin_numeric_features=select_bin_numeric_features,feature_selection=feature_selection,
                     feature_selection_threshold=feature_selection_threshold,remove_multicollinearity=remove_multicollinearity,
                     multicollinearity_threshold = multicollinearity_threshold,           
                     remove_perfect_collinearity=remove_perfect_collinearity,
