@@ -1,4 +1,4 @@
 __pycache__/
 catboost_info/*
 .vscode/*
-logs.log
+*.log
