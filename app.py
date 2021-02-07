@@ -62,7 +62,7 @@ def run():
             PAGES[selection][1].write(state)
     if selection == "Prediction and Save":
         PAGES[selection].write(state)
-    st.write(state.__dict__)
+    # st.write(state.__dict__)
     state.sync()
 
 
