@@ -54,11 +54,11 @@ def plot_reg_shap_global_and_local(shap_plot_type:str, model:object,  X_train, p
     else:
         if shap_plot_type == "global": 
             if plot_type == 'bar':
-                shap.plots.bar(shap_values, max_display=max_display)
+                shap.plots.bar(shap_values, max_display=max_display,show=False)
             elif plot_type == 'beeswarm':
-                shap.plots.beeswarm(shap_values, max_display=max_display)
+                shap.plots.beeswarm(shap_values, max_display=max_display,show=False)
             else:
-                shap.plots.heatmap(shap_values, max_display=max_display)
+                shap.plots.heatmap(shap_values, max_display=max_display,show=False)
         elif shap_plot_type == "local":
             shap.plots.waterfall(shap_values[index_of_explain],max_display=max_display,show=False) 
 
@@ -234,11 +234,11 @@ def plot_cls_shap_global_and_local(shap_plot_type:str, model:object,  X_train, t
         else:
             if shap_plot_type == "global": 
                 if plot_type == 'bar':
-                    shap.plots.bar(shap_values, max_display=max_display)
+                    shap.plots.bar(shap_values, max_display=max_display,show=False)
                 elif plot_type == 'beeswarm':
-                    shap.plots.beeswarm(shap_values, max_display=max_display)
+                    shap.plots.beeswarm(shap_values, max_display=max_display,show=False)
                 else:
-                    shap.plots.heatmap(shap_values, max_display=max_display)
+                    shap.plots.heatmap(shap_values, max_display=max_display,show=False)
             elif shap_plot_type == "local":
                 shap.plots.waterfall(shap_values[index_of_explain],max_display=max_display,show=False) 
     else:
