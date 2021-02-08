@@ -25,12 +25,12 @@ def run():
         layout="centered",
         initial_sidebar_state='expanded'
     )
-    load_header_image(IMAGE_FOLDER/'EIDOname.png')
     load_nav_image(IMAGE_FOLDER/'EIDOlogo.png')
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
 
     if selection == "Home":
+        load_header_image(IMAGE_FOLDER/'EIDOname.png')
         try:
             state_df,task = PAGES[selection].write(state)
             state.df, state.task = state_df,task
