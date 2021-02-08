@@ -20,7 +20,7 @@ IMAGE_FOLDER = Path("images/")
 def load_image():
     image_eido = Image.open(IMAGE_FOLDER/'EIDOlogo.png')
     st.sidebar.image(image_eido, use_column_width=True)
-    
+
 
 def run():
     state = _get_state()
