@@ -26,7 +26,7 @@ machine learning:
 4. Model Training:
    * Compare all available Machine Learning Algorithm automatically.
    * Train a selected single model
-   * Train a ensemble model
+   * Train an ensemble model
    * Hyperparameter tuning for single model
 
 5. Model Result Visualization:
