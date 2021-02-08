@@ -1,9 +1,9 @@
 import streamlit as st
-from PIL import Image
 from pages import (home,data_info, reg_preprocessing,prediction, reg_training, 
                    reg_model_analysis,cls_preprocessing,cls_training,cls_model_analysis)
 from utils.session import _get_state
 from pathlib import Path
+from utils.image_loader import *
 
     
 PAGES = {
@@ -17,11 +17,6 @@ PAGES = {
 
 IMAGE_FOLDER = Path("images/")
 
-def load_image():
-    image_eido = Image.open(IMAGE_FOLDER/'EIDOlogo.png')
-    st.sidebar.image(image_eido, use_column_width=True)
-
-
 def run():
     state = _get_state()
     st.set_page_config(
@@ -30,7 +25,8 @@ def run():
         layout="centered",
         initial_sidebar_state='expanded'
     )
-    load_image()
+    load_header_image(IMAGE_FOLDER/'EIDOname.png')
+    load_nav_image(IMAGE_FOLDER/'EIDOlogo.png')
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
 
