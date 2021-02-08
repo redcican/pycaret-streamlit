@@ -17,6 +17,6 @@ spec:
    spec:
      containers:
      - name: eidodata
-       image: gcr.io/streamlit-292317/eido-data:v1
+       image: gcr.io/PROJECT_ID/IMAGE:TAG
        ports:
        - containerPort: 8501
