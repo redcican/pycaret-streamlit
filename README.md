@@ -3,7 +3,10 @@
   <img src="images/icons.ico/">
 </p>
 
-****
+![Build and Deploy to GKE](https://github.com/redcican/pycaret-eidodata/workflows/Build%20and%20Deploy%20to%20GKE/badge.svg)
+
+**** 
+
 An End-to-End Machine Learning Web Application for Classification and Regression problem. Currently supported for csv and excel files. The application relies on these two excellent libraries for
 machine learning:
 * streamlit: https://github.com/streamlit/streamlit
