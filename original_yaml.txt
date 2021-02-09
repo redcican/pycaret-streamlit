@@ -50,3 +50,26 @@ spec:
  ports:
  - port: 8501
    targetPort: 8501
+
+
+################################################################
+github action GKE service account roles:
+
+0. create a new service accout:
+gcloud iam service-accounts create $SA_NAME
+
+1. gcloud projects add-iam-policy-binding streamlit-292317 \
+  --member=serviceAccount:github@streamlit-292317.iam.gserviceaccount.com \
+  --role=roles/container.admin \
+  --role=roles/storage.admin \
+  --role=roles/container.viewer \
+  --role=roles/container.clusterViewer \
+  --role=roles/container.clusterAdmin
+
+2.  gcloud container clusters get-credentials eido-data --zone=us-central1-b
+
+3. create key.json
+gcloud iam service-accounts keys create key.json --iam-account=github@streamlit-292317.iam.gserviceaccount.com
+
+4. gcloud auth activate-service-account $GOOGLE_AUTH_EMAIL --key-file /keyconfig.json --project $GOOGLE_PROJECT_ID
+
