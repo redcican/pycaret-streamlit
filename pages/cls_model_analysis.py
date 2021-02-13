@@ -2,7 +2,6 @@ import streamlit as st
 from pycaret.classification import *
 from utils.plot_shap import plot_cls_shap_global_and_local
 
-
 def write(state):
     st.subheader("Analyzing Performance of Trained Machine Learning Model")
     state.X_train = get_config('X_train')
@@ -34,6 +33,7 @@ def write(state):
             if state.is_ensemble:
                 st.markdown('<p style="color:#f42756">SHAP Value is not supported for Ensemble Model</p>',unsafe_allow_html=True)       
             else:
+                st.markdown("---")
                 is_shap = st.checkbox("Do You Want to Check SHAP Value?", value=False)
                 kernel_classifier= ["KNeighborsClassifier","CatBoostClassifier","AdaBoostClassifier",
                                     "QuadraticDiscriminantAnalysis","NaiveBayes", "GaussianProcessClassifier","MLPClassifier"]

@@ -29,6 +29,7 @@ def write(state):
             size = st.number_input('Training Size:', value=0.7)
             fold_strategy = st.selectbox('Choice of Cross Validation Strategy',options=['kfold','stratifiedkfold','groupkfold'])
             fold = st.number_input('Number of Folds to be Used in Cross Validation',min_value=2,value=10)
+                
         # Preprocessing
         with st.beta_expander("Preprocessing"):
             with st.beta_container():

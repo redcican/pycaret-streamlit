@@ -1,4 +1,5 @@
-FROM python:3.8.5
+# FROM python:3.8.5
+FROM python:3.8-slim
 
 RUN pip install virtualenv
 ENV VIRTUAL_ENV=/venv
@@ -9,7 +10,7 @@ WORKDIR /app
 ADD . /app
 
 # Install dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --user -r requirements.txt
 
 # copying all files over
 COPY . /app
