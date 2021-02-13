@@ -2,14 +2,14 @@ import streamlit as st
 from utils.retrieve_models_name import retrieve_models_name
 from utils.convert_dict_to_df import convert_dict_to_df
 from pycaret.regression import *
-from utils.st_xgboost import train_xgboost_regression
+
 
 def write(state):
     st.subheader("Create Model from Best Result or Select Single Model or Ensemble?")
     
     if state.is_set_up:
     
-        all_models = retrieve_models_name(is_regression=True)
+        all_models = retrieve_models_name(type="Regression")
 
         select_model = None 
         select_model_names = list(all_models.keys())
@@ -90,9 +90,7 @@ def write(state):
                     n_iter = st.number_input("Number of iterations in the Grid Search", min_value = 1, value=10)
                     optimize = st.selectbox('Metric Name to be Evaluated for Hyperparameter Tuning', options=['R2','MAE','MSE','RMSE','RMSLE','MAPE'], )
                     search_library = st.selectbox('The Search Library Used for Tuning Hyperparameters.',options=['scikit-learn',
-                                                                                                                'scikit-optimize',
-                                                                                                                'tune-sklearn',
-                                                                                                                'optuna'])
+                                                                                                   'optuna'])
                     search_algorithms = []
                     if search_library == 'scikit-learn':
                         search_algorithms = ['random','grid']

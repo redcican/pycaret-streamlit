@@ -1,17 +1,38 @@
-from pycaret.regression import *
 import streamlit as st
 from utils.retrieve_element_for_prediction import retrieve_train_element
 from utils.download_button import download_button
 import joblib
 from pathlib import Path
+import pandas as pd
 
-def predict(model, input_df):
-    prediction_df = predict_model(estimator=model, data=input_df)
-    predictions = prediction_df['Label'][0]
-    return predictions
 
 def write(state):
+    
+    if state.task == "Regression":
+        from pycaret.regression import predict_model, finalize_model,save_model
+    elif state.task == "Classification":
+        from pycaret.classification import predict_model, finalize_model,save_model
+    else:
+        from pycaret.clustering import predict_model,save_model
         
+    def online_predict(model, input_df,target_type):
+        """make prediction on online data
+
+        Args:
+            model (object): a trained model
+            input_df (pd.DataFrame): the input dataframe for predicitons
+            target_type (str): the type of training target
+
+        Returns:
+            str: predcition
+        """
+        prediction_df = predict_model(model, data=input_df)
+        if target_type == 'Regression' or target_type == 'Classification':
+            predictions = prediction_df['Label'][0]
+        else:
+            predictions = prediction_df['Cluster'][0]
+        return predictions        
+
     if state.trained_model is not None:
         st.header("Make a Prediction on Given Input or Upload a File.")
 
@@ -27,17 +48,22 @@ def write(state):
         
         if add_selectbox == "Online":
             with st.spinner("Predicting ..."):
-                input_df = retrieve_train_element(X_before_preprocess, target_name, ignore_columns)
+                input_df = retrieve_train_element(X_before_preprocess, target_name, ignore_columns,state.task)
                 output = ""
                 if st.button("Predict"):
-                    output = predict(trained_model, input_df)
+                    output = online_predict(trained_model, input_df,state.task)
                     output = str(output)
                     st.success(f'The Prediction is **{output}**')
+        
         if add_selectbox == 'Batch':
-            file_upload = st.file_uploader('Upload csv file for prediciton', type=["csv"])
+            file_upload = st.file_uploader('Upload csv file for prediciton', type=["csv", "xlsx"])
             if file_upload is not None:
-                data = pd.read_csv(file_upload)
-                predictions = predict_model(estimator=trained_model, data=data)
+                file_extension = file_upload.name.split('.')[1]
+                if file_extension == "csv":
+                    data = pd.read_csv(file_upload)
+                else:
+                    data = pd.read_excel(file_upload)
+                predictions = predict_model(trained_model, data=data)
                 st.write(predictions)  
                 
                 is_download = st.checkbox("Do You Want to Download the Prediction File?", value=False)
@@ -54,7 +80,7 @@ def write(state):
             is_download = st.checkbox("Do You Want to Download the Model?", value=False)
             if is_download:
                 file_name = st.text_input("File Name",value="",key=2)
-                is_finalize = st.checkbox("Do You Want to Finalize the Model?", value=False)
+                is_finalize = st.checkbox("Do You Want to Finalize the Model (not for clustering)?", value=False)
                 if file_name:
                     if is_finalize:
                         finalized_model = finalize_model(trained_model)

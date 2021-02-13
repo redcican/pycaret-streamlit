@@ -2,7 +2,6 @@ import streamlit as st
 from pycaret.regression import *
 from utils.plot_regression import get_plotly_act_vs_predict
 from utils.plot_shap import plot_reg_shap_global_and_local
-import subprocess
 
 
 def write(state):

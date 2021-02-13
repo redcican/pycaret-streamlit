@@ -4,7 +4,7 @@ import pandas as pd
 
 def write(state):
     with st.spinner("Loading Home ..."):
-        task_type = st.radio("Please Select the Task Type: ", options=["Regression", "Classification"])
+        task_type = st.radio("Please Select the Task Type: ", options=["Regression", "Classification", "Clustering"])
         state = st.file_uploader('Upload csv file for project', type=["csv", "xlsx"])
         if state is not None:
             file_extension = state.name.split('.')[1]

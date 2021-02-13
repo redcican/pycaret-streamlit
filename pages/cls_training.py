@@ -8,7 +8,7 @@ def write(state):
     
     if state.is_set_up:
     
-        all_models = retrieve_models_name(is_regression=False)
+        all_models = retrieve_models_name(type="Classification")
         # st.write(all_models)
         select_model = None 
         select_model_names = list(all_models.keys())
