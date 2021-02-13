@@ -10,7 +10,7 @@ WORKDIR /app
 ADD . /app
 
 # Install dependencies
-RUN pip install --no-cache-dir --user -r requirements.txt
+RUN pip install -r requirements.txt
 
 # copying all files over
 COPY . /app
