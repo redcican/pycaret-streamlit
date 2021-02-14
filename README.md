@@ -68,7 +68,7 @@ streamlit run app.py
 ## Run on Docker
 1. Pull the Docker image:
 ```
-docker pull cican/github-action:tagname
+docker pull cican/github-action:latest
 ```
 2. Run the  Docker image locally:
 ```
