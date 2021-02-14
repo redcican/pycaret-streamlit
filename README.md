@@ -72,7 +72,7 @@ docker pull cican/github-action:latest
 ```
 2. Run the  Docker image locally:
 ```
-docker run -p 8501:8501 cican/github-action:tagname
+docker run -p 8501:8501 cican/github-action
 ```
 3. Open the localhost:8501
 
