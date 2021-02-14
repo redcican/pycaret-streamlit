@@ -43,8 +43,8 @@ machine learning:
    * Save whole Machine Learning Pipeline as pickle file
 
 ****
-## Install and Run
-1. Clione the repository to you computer:
+## Install and Run 
+1. Clone the repository to you computer:
 ```shell script 
 git clone https://github.com/redcican/pycaret-eidodata.git
 cd pycaret-eidodata
@@ -62,4 +62,19 @@ pip install -r requirements.txt
 4. Run streamlit locally and start web service:
 ```shell script
 streamlit run app.py
+```
+
+****
+## Run on Docker
+1. Pull the Docker image:
+```
+docker pull cican/github-action:tagname
+```
+2. Run the  Docker image locally:
+```
+docker run -p 8501:8501 cican/github-action:tagname
+```
+3. Open the localhost:8501
+```
+[http:localhost:8501](http:localhost:8501/)
 ```
