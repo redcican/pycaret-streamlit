@@ -13,3 +13,13 @@ ConfigSpace==0.4.17
 xlrd==2.0.1
 xlsxwriter==1.3.7
 openpyxl==3.0.6
+torch==1.7.1
+sdv==0.7.0
+# threadpoolctl==2.1.0
+# patsy==0.5.1
+# statsmodels==0.12.2
+# llvmlite==0.35.0
+# numba==0.52.0
+# six==1.15.0
+# decorator==4.4.2
+# networkx==2.5

@@ -79,7 +79,7 @@ def write(state):
                 try:
                     if button_after_create:
                         with st.spinner("Show All the Results..."):
-                            st.write(convert_dict_to_df(state.log_history["create_model"]))
+                            st.table(convert_dict_to_df(state.log_history["create_model"]))
                 except:
                     st.error("Please Train a Model first!")
 
@@ -120,7 +120,7 @@ def write(state):
                     button_tuning = st.button("Show Tuning Model Result")
                     if button_tuning:
                         with st.spinner("Show All the Results..."):
-                            st.write(convert_dict_to_df(state.log_history["tuned_models"]))
+                            st.table(convert_dict_to_df(state.log_history["tuned_models"]))
             
             else:
                 fold_ensemble_text = st.text_input('Control Cross Validation Folds (int or None)', value='None',key=3)
@@ -176,7 +176,7 @@ def write(state):
                 button_after_create = st.button("Show Model Result")
                 if button_after_create:
                     with st.spinner("Show All the Results..."):
-                        st.write(convert_dict_to_df(state.log_history["create_model"]))
+                        st.table(convert_dict_to_df(state.log_history["create_model"]))
    
             state.X_before_preprocess = get_config('data_before_preprocess')
             state.y_before_preprocess = get_config('target_param')

@@ -44,7 +44,7 @@ def write(state):
         X_before_preprocess = state.X_before_preprocess
         target_name = state.y_before_preprocess
         ignore_columns = state.ignore_columns
-        trained_model = state.trained_model
+        trained_model = state.trained_model      
         
         if add_selectbox == "Online":
             with st.spinner("Predicting ..."):

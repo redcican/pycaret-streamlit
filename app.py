@@ -1,7 +1,7 @@
 import streamlit as st
 from pages import (home,data_info, reg_preprocessing,prediction, reg_training, 
                    reg_model_analysis,cls_preprocessing,cls_training,cls_model_analysis,
-                   cluster_preprocessing,cluster_training,cluster_model_analysis)
+                   cluster_preprocessing,cluster_training,cluster_model_analysis, backward_analysis)
 from utils.session import _get_state
 from pathlib import Path
 from utils.image_loader import *
@@ -12,8 +12,9 @@ PAGES = {
     "DataInfo": data_info,
     "Preprocessing": (reg_preprocessing,cls_preprocessing,cluster_preprocessing),
     "Training" : (reg_training, cls_training,cluster_training),
-    "ModelAnalysis": (reg_model_analysis, cls_model_analysis,cluster_model_analysis),
+    "Model Analysis": (reg_model_analysis, cls_model_analysis,cluster_model_analysis),
     "Prediction and Save": prediction,
+    "Backward Analysis": backward_analysis,
 }
 
 IMAGE_FOLDER = Path("images/")
@@ -56,7 +57,7 @@ def run():
             PAGES[selection][1].write(state)
         else:
             PAGES[selection][2].write(state)
-    if selection == "ModelAnalysis":
+    if selection == "Model Analysis":
         if state.task == "Regression":
             PAGES[selection][0].write(state)
         elif state.task =="Classification":
@@ -65,7 +66,10 @@ def run():
             PAGES[selection][2].write(state)
     if selection == "Prediction and Save":
         PAGES[selection].write(state)
-    #st.write(state.__dict__)
+        
+    if selection == "Backward Analysis":
+        PAGES[selection].write(state)
+    st.write(state.__dict__)
     state.sync()
 
 

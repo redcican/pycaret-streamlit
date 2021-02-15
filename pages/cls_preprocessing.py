@@ -194,7 +194,7 @@ def write(state):
         try:  
             if button_model:
                 with st.spinner("Show All the Results..."):
-                    st.write(convert_dict_to_df(state.log_history["compare_models"]))
+                    st.table(convert_dict_to_df(state.log_history["compare_models"]))
         except:
             st.error("Please Compare All Models first!")
         
