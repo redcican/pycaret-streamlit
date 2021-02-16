@@ -69,7 +69,7 @@ def run():
         
     # if selection == "Backward Analysis":
     #     PAGES[selection].write(state)
-    st.write(state.__dict__)
+    # st.write(state.__dict__)
     state.sync()
 
 
