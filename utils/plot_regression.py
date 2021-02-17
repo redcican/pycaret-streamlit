@@ -38,3 +38,64 @@ def get_plotly_act_vs_predict(estimator,X_train,X_test,y_train,y_test):
         width=1000)
     
     return fig
+
+
+def gauge_plot(original_value,optimal_value, lower_bound, 
+               upper_bound, min_value, max_value):
+    """plot the gauge plot for backwards Analysis regression problem
+
+    Args:
+        original_value (float or int): the original Y value to optimize
+        optimal_value (float or int): the optimal value found in generated data
+        lower_bound (float or int): the lower bound value to optimize 
+        upper_bound (float or int): the upper bound value to optimize
+        min_value (float or int): the minimum value of target column
+        max_value (float or int): the maximum value of target column    
+    Returns:
+        [object]: plotly gauge object to show
+    """
+    if original_value > optimal_value:
+        delta = {'reference': original_value, 'increasing': {'color': "RebeccaPurple"}}
+    else:
+        delta = {'reference': original_value, 'decreasing': {'color': "RebeccaPurple"}}   
+    
+    
+    
+    fig = go.Figure(go.Indicator(
+        mode = "gauge+number+delta",
+        value = optimal_value,
+        domain = {'x': [0, 1], 'y': [0, 1]},
+        title = {'text': "Optimal", 'font': {'size': 24}},
+        
+        delta = delta,
+        gauge = {
+            'axis': {'range': [min_value, max_value], 'tickwidth': 1, 'tickcolor': "darkblue"},
+            'bar': {'color': "darkblue"},
+            'bgcolor': "white",
+            'borderwidth': 2,
+            'bordercolor': "gray",
+            'steps': [
+                # {'range': [min_value, mean_value], 'color': 'cyan'},royalblue
+                {'range': [lower_bound, upper_bound], 'color': 'cyan'}]}))
+            # 'threshold': {
+            #     'line': {'color': "red", 'width': 4},
+            #     'thickness': 0.75,
+            #     'value': max_value-reference_value}}))
+    fig.update_layout(paper_bgcolor = "lavender", font = {'color': "darkblue", 'family': "Arial"})
+    return fig
+
+
+def find_top_5_nearest(array, value):
+    """Find the top 5 closest neighbors of given optimal value
+
+    Args:
+        array (np.array): the generated data with prediction
+        value (int or float): optimal value to find
+
+    Returns:
+        list: the top 5 indices of suggested value
+    """
+    array = np.asarray(array)
+    diff = np.abs(array - value)
+    indices = np.argsort(diff)
+    return indices
