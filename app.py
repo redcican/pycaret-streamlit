@@ -68,7 +68,10 @@ def run():
         PAGES[selection].write(state)
         
     if selection == "Backward Analysis":
-        PAGES[selection].write(state)
+        if state.task == "Regression":
+            PAGES[selection].write(state)
+        else:
+            st.header("Only Support for Regression Task!")
     st.write(state.__dict__)
     state.sync()
 
