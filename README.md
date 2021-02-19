@@ -5,6 +5,7 @@
 
 ![Build and Deploy to GKE](https://github.com/redcican/pycaret-eidodata/workflows/Build%20and%20Deploy%20to%20GKE/badge.svg)
 ![Docker Image CI](https://github.com/redcican/pycaret-eidodata/workflows/Docker%20Image%20CI/badge.svg)
+[![Azure CICD Pipeline](https://github.com/redcican/pycaret-eidodata/actions/workflows/arure_ci_cd.yml/badge.svg)](https://github.com/redcican/pycaret-eidodata/actions/workflows/arure_ci_cd.yml)
 **** 
 
 An End-to-End Machine Learning Web Application for Classification and Regression problem. Currently supported for csv and excel files. The application relies on these two excellent libraries for
