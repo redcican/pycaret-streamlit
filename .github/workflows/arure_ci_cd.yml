@@ -31,7 +31,7 @@ jobs:
         name: python artifacts
         path: public/
 
-  Build-Dokcer-Image:
+  Build-Docker-Image:
     runs-on: ubuntu-latest
     needs: build
     name: Build image and store in Github Packages
