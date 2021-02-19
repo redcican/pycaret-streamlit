@@ -1,4 +1,4 @@
-name: Build Python Streamlit Application in Azure and Hosted in GitHub
+name: Azure CICD Pipeline
 
 
 on: [push]
