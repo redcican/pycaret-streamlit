@@ -1,6 +1,6 @@
 name: Deploy to AKS Cluster
 on:
-  pull_request:
+  push:
     branches:
     - master
 
@@ -13,8 +13,8 @@ jobs:
     - uses: Azure/docker-login@v1
       with:
         login-server: cloudlifeacr.azurecr.io
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        username: ${{ secrets.AZURE_USERNAME }}
+        password: ${{ secrets.AZURE_PASSWORD }}
     
     - run: |
         docker build . -t cloudlifeacr.azurecr.io/eidodata:${{ github.sha }}
@@ -30,8 +30,8 @@ jobs:
     - uses: Azure/k8s-create-secret@v1
       with:
         container-registry-url: cloudlifeacr.azurecr.io
-        container-registry-username: ${{ secrets.ACR_USERNAME }}
-        container-registry-password: ${{ secrets.ACR_PASSWORD }}
+        container-registry-username: ${{ secrets.AZURE_USERNAME }}
+        container-registry-password: ${{ secrets.AZURE_PASSWORD }}
         secret-name: k8s-secret
 
     - uses: Azure/k8s-deploy@v1
