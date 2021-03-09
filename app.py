@@ -72,7 +72,7 @@ def run():
             PAGES[selection].write(state)
         else:
             st.header("Only Support for Regression Task!")
-    st.write(state.__dict__)
+    # st.write(state.__dict__)
     state.sync()
 
 
