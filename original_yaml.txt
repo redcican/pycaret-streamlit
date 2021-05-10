@@ -59,7 +59,7 @@ github action GKE service account roles:
 gcloud iam service-accounts create $SA_NAME (service name)
 
 1. gcloud projects add-iam-policy-binding streamlit-292317 \
-  --member=serviceAccount:github@streamlit-292317.iam.gserviceaccount.com \
+  --member=serviceAccount:github2@streamlit-292317.iam.gserviceaccount.com \
   --role=roles/container.admin \
   --role=roles/storage.admin \
   --role=roles/container.viewer \
