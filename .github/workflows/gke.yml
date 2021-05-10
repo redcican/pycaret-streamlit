@@ -18,7 +18,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: github    # TODO: update to cluster name
-  GKE_ZONE: us-central1-c   # TODO: update to cluster zone
+  GKE_ZONE: us-central1-b   # TODO: update to cluster zone
   DEPLOYMENT_NAME: eidodata # TODO: update to deployment name
   IMAGE: eidodata
 

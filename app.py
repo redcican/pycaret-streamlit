@@ -75,6 +75,5 @@ def run():
     # st.write(state.__dict__)
     state.sync()
 
-
 if __name__ == '__main__':
     run()

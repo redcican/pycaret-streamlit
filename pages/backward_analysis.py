@@ -4,6 +4,8 @@ from sdv.tabular import GaussianCopula,CopulaGAN,CTGAN,TVAE
 from pycaret.regression import predict_model
 from utils.convert_str_to_list import convert_str_to_list
 from utils.plot_regression import gauge_plot,find_top_5_nearest
+from utils.download_button import download_button
+
 
 def write(state):
     if state.trained_model is not None:
@@ -94,6 +96,16 @@ def write(state):
                     new_data_prediction = predict_model(trained_model,new_data)
                     st.write(new_data_prediction)
                     state.new_data_prediction = new_data_prediction
+                    
+            button_download = st.button("Download Generated Data")
+            if button_download:
+                file_extension = st.selectbox("Choose Csv or Excel File to Download", options=[".csv",".xlsx"])
+                file_name = st.text_input("File Name",value="prediction",key=1)
+                if file_name:
+                    href = download_button(state.new_data_prediction, file_name, "Download",file_extension)
+                    st.markdown(href, unsafe_allow_html=True)
+                else:
+                    st.error("File Name cannot be empty!") 
                 
         st.markdown("---")
         with st.beta_expander("Backward Analysis"):
