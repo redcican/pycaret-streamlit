@@ -59,7 +59,7 @@ github action GKE service account roles:
 gcloud iam service-accounts create $SA_NAME (service name)
 
 1. gcloud projects add-iam-policy-binding streamlit-292317 \
-  --member=serviceAccount:github2@streamlit-292317.iam.gserviceaccount.com \
+  --member=serviceAccount:github@streamlit-292317.iam.gserviceaccount.com \
   --role=roles/container.admin \
   --role=roles/storage.admin \
   --role=roles/container.viewer \
@@ -72,4 +72,4 @@ gcloud iam service-accounts create $SA_NAME (service name)
 gcloud iam service-accounts keys create key.json --iam-account=github@streamlit-292317.iam.gserviceaccount.com
 
 4. gcloud auth activate-service-account $GOOGLE_AUTH_EMAIL --key-file /keyconfig.json --project $GOOGLE_PROJECT_ID
-(GOOGLE_AUTH_EMAIL: service email adress)
+
