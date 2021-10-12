@@ -1,4 +1,4 @@
-# EidoData Web Application
+# Streamlit-pycaret Web Application
 
 ![Build and Deploy to GKE](https://github.com/redcican/pycaret-eidodata/workflows/Build%20and%20Deploy%20to%20GKE/badge.svg)
 ![Docker Image CI](https://github.com/redcican/pycaret-eidodata/workflows/Docker%20Image%20CI/badge.svg)
