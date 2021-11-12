@@ -15,14 +15,18 @@ def write(state):
             # select the feature columns
             columns_name.remove(target_column)
             feature_columns = columns_name
-
+            
             # remove the columns ? 
-            remove_column = st.checkbox('Do you have column(s) to remove?')
-            remove_columns = None
+            is_remove = state.is_remove if state.is_remove is True else False
+            remove_column = st.checkbox('Do you have column(s) to remove?', value=is_remove)
+            
+            ignore_columns = state.ignore_columns if state.ignore_columns is not None else None
+            
             if remove_column:
-                remove_columns = st.multiselect('Select one or more column(s) to remove',
-                                            feature_columns)
+                remove_columns = st.multiselect('Select one or more column(s) to remove',feature_columns, default=ignore_columns)
                 feature_columns = [col for col in feature_columns if col not in remove_columns]
+                
+                state.is_remove = True
                 state.ignore_columns = remove_columns
         # training and testing split
         with st.beta_expander("Traning and Testing Split"):
@@ -142,7 +146,7 @@ def write(state):
                     transformation_method=transformation_method, transform_target=transform_target,
                     transform_target_method=transform_target_method,unknown_categorical_method=unknown_categorical_method,
                     combine_rare_levels=combine_rare_levels,rare_level_threshold=rare_level_threshold,
-                    feature_interaction=feature_interaction,ignore_features=remove_columns,
+                    feature_interaction=feature_interaction,ignore_features=ignore_columns,
                     feature_ratio=feature_ratio,polynomial_features=polynomial_features,
                     polynomial_degree=polynomial_degree,polynomial_threshold=polynomial_threshold,
                     trigonometry_features=trigonometry_features,group_features=group_features,
@@ -154,7 +158,7 @@ def write(state):
                     ignore_low_variance=ignore_low_variance,create_clusters=create_clusters,cluster_iter=cluster_iter,
                     remove_outliers=remove_outliers,outliers_threshold=outliers_threshold,html=False,silent=True)
 
-                state.log_history = {"setup":pull(True).data.to_dict()} 
+                state.log_history = {"setup":pull(True).data} 
                 # record the setup procedure
                 state.is_set_up = True
                 
@@ -163,7 +167,7 @@ def write(state):
             try:
                 if button_transform:
                     with st.spinner("Loading..."):
-                        st.write(convert_dict_to_df(state.log_history["setup"]))
+                        st.table(state.log_history["setup"])
             except:
                 st.error("Please Process and Transform Data first!")
         

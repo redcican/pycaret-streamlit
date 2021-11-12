@@ -21,6 +21,7 @@ IMAGE_FOLDER = Path("images/")
 
 def run():
     state = _get_state()
+    #state = st.session_state
     st.set_page_config(
         page_title="EidoData App",
         page_icon=':shark:',
@@ -73,7 +74,7 @@ def run():
         else:
             st.header("Only Support for Regression Task!")
     # st.write(state.__dict__)
-    state.sync()
+    # state.sync()
 
 if __name__ == '__main__':
     run()
