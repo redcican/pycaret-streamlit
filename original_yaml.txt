@@ -73,3 +73,4 @@ gcloud iam service-accounts keys create key.json --iam-account=github@streamlit-
 
 4. gcloud auth activate-service-account $GOOGLE_AUTH_EMAIL --key-file /keyconfig.json --project $GOOGLE_PROJECT_ID
 
+5. need to explicitly add "View" role to the service account "Stroage Object View"

@@ -20,19 +20,3 @@ spec:
        image: gcr.io/PROJECT_ID/IMAGE:TAG
        ports:
        - containerPort: 8501
-
----
-apiVersion: v1
-kind: Service
-metadata:
- name: streamlitweb-backend
- labels:
-   app: eidodata
-spec:
- type: LoadBalancer
- selector:
-   app: eidodata
-   tier: web
- ports:
- - port: 80
-   targetPort: 8501

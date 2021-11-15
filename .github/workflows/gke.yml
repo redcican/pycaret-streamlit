@@ -63,7 +63,7 @@ jobs:
       run: |-
         curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
-#     # Deploy the Docker image to the GKE cluster
+#     # Deploy the Docker image to the GKE cluster, from here wont be able to run
     - name: Deploy
       run: |-
         ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA

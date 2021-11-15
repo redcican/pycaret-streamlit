@@ -74,7 +74,7 @@ def run():
         else:
             st.header("Only Support for Regression Task!")
     # st.write(state.__dict__)
-    # state.sync()
+    state.sync()
 
 if __name__ == '__main__':
     run()
