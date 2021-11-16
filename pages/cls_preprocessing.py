@@ -157,7 +157,7 @@ def write(state):
                     ignore_low_variance=ignore_low_variance,create_clusters=create_clusters,cluster_iter=cluster_iter,
                     remove_outliers=remove_outliers,outliers_threshold=outliers_threshold,html=False,silent=True)
 
-                state.log_history = {"setup":pull(True).data} 
+                state.log_history = {"setup":pull(True).data.to_dict()} 
                 # record the setup procedure
                 state.is_set_up = True
                 state.classification_task = list(state.log_history["setup"]["Value"].values())[2]

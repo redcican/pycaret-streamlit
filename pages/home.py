@@ -13,7 +13,7 @@ def write(state):
             else:
                 state.df = pd.read_excel(state)
             st.header("The First 20 Rows of Data")
-            st.write(state.df.head(20))
+            st.table(state.df.head(20))
             
             if state.df is not None:
                 state.task_type=task_type

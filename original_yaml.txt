@@ -55,22 +55,14 @@ spec:
 ################################################################
 github action GKE service account roles:
 
-0. create a new service accout:
-gcloud iam service-accounts create $SA_NAME (service name)
+1. follow the instruction of this link:
+https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-google-kubernetes-engine
 
-1. gcloud projects add-iam-policy-binding streamlit-292317 \
-  --member=serviceAccount:github@streamlit-292317.iam.gserviceaccount.com \
-  --role=roles/container.admin \
-  --role=roles/storage.admin \
-  --role=roles/container.viewer \
-  --role=roles/container.clusterViewer \
-  --role=roles/container.clusterAdmin
+2. make sure assign the following roles to the service accoutn:
 
-2.  gcloud container clusters get-credentials eido-data --zone=us-central1-b (eido-data is K8s cluster name)
-
-3. create key.json
-gcloud iam service-accounts keys create key.json --iam-account=github@streamlit-292317.iam.gserviceaccount.com
-
-4. gcloud auth activate-service-account $GOOGLE_AUTH_EMAIL --key-file /keyconfig.json --project $GOOGLE_PROJECT_ID
-
-5. need to explicitly add "View" role to the service account "Stroage Object View"
+* Container Registry service agent
+* Kubernetes Engine Cluster Viewer
+* Kubernetes Engine Develop
+* Kubernetes Engine Viewer
+* Storage Admin
+* Storage Object Viewer
