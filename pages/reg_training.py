@@ -1,8 +1,7 @@
 import streamlit as st
 from utils.retrieve_models_name import retrieve_models_name
-from utils.convert_dict_to_df import convert_dict_to_df
 from pycaret.regression import *
-
+from st_aggrid import AgGrid
 
 def write(state):
     st.subheader("Create Model from Best Result or Select Single Model or Ensemble?")
@@ -59,7 +58,7 @@ def write(state):
         
         
         st.subheader("Create Model")
-        with st.beta_expander("Select Parameters for Creating Model"):
+        with st.expander("Select Parameters for Creating Model"):
             if not state.is_ensemble:
                 fold_text = st.text_input('Control Cross Validation Folds (int or None)', value='None',key=1)
                 fold = None if fold_text == 'None' else int(fold_text)
@@ -70,7 +69,8 @@ def write(state):
                     if button_create:
                         with st.spinner("Training Model..."):
                             state.trained_model = create_model(estimator=all_models[select_model], fold=fold, cross_validation=cross_validation)
-                        state.log_history["create_model"] = pull(True).to_dict()
+                        state.log_history["create_model"] = pull(True)
+       
                 except:
                     st.error("Please Set Up Dataset first!")     
 
@@ -79,7 +79,7 @@ def write(state):
                 try:
                     if button_after_create:
                         with st.spinner("Show All the Results..."):
-                            st.table(convert_dict_to_df(state.log_history["create_model"]))
+                            AgGrid(state.log_history["create_model"])
                 except:
                     st.error("Please Train a Model first!")
 
@@ -89,8 +89,7 @@ def write(state):
                     fold_tune = None if fold_text_tune == 'None' else int(fold_text_tune)
                     n_iter = st.number_input("Number of iterations in the Grid Search", min_value = 1, value=10)
                     optimize = st.selectbox('Metric Name to be Evaluated for Hyperparameter Tuning', options=['R2','MAE','MSE','RMSE','RMSLE','MAPE'], )
-                    search_library = st.selectbox('The Search Library Used for Tuning Hyperparameters.',options=['scikit-learn',
-                                                                                                   'optuna'])
+                    search_library = st.selectbox('The Search Library Used for Tuning Hyperparameters.',options=['scikit-learn','optuna'])
                     search_algorithms = []
                     if search_library == 'scikit-learn':
                         search_algorithms = ['random','grid']
@@ -110,17 +109,14 @@ def write(state):
                     if button_tuning:
                         with st.spinner("Search Hyperparamters..."):
                             created_model = create_model(estimator=all_models[select_model])
-                            state.trained_model = tune_model(created_model, fold=fold_tune, n_iter=n_iter,
-                                                optimize=optimize, search_library=search_library, search_algorithm=search_algorithm,
-                                                early_stopping=early_stopping, early_stopping_max_iters=early_stopping_iter,
-                                                choose_better = choose_better)
-                            state.log_history["tuned_models"] = pull(True).to_dict()
+                            state.trained_model = tune_model(created_model, fold=fold_tune, n_iter=n_iter, optimize=optimize, search_library=search_library, search_algorithm=search_algorithm,early_stopping=early_stopping, early_stopping_max_iters=early_stopping_iter, choose_better = choose_better)
+                            state.log_history["tuned_models"] = pull(True)
 
                     st.markdown('<p style="color:#1386fc">Show All the Metrics Results After Tuning.</p>',unsafe_allow_html=True)       
                     button_tuning = st.button("Show Tuning Model Result")
                     if button_tuning:
                         with st.spinner("Show All the Results..."):
-                            st.table(convert_dict_to_df(state.log_history["tuned_models"]))
+                            AgGrid(state.log_history["tuned_models"])
             
             else:
                 fold_ensemble_text = st.text_input('Control Cross Validation Folds (int or None)', value='None',key=3)
@@ -137,7 +133,7 @@ def write(state):
                             state.trained_model = ensemble_model(base, method=select_ensemble_method, fold=fold_ensemble,
                                                                  n_estimators=n_estimators, choose_better=choose_better_ensemble,
                                                                  optimize=optimize_ensemble)
-                        state.log_history["create_model"] = pull(True).to_dict()
+                        state.log_history["create_model"] = pull(True)
 
                 elif ensemble_method == "Blend":
                     bases = []
@@ -150,7 +146,7 @@ def write(state):
                             state.trained_model = blend_models(estimator_list=bases, fold=fold_ensemble,
                                                                  choose_better=choose_better_ensemble,
                                                                  optimize=optimize_ensemble)
-                        state.log_history["create_model"] = pull(True).to_dict()
+                        state.log_history["create_model"] = pull(True)
 
                 else:
                     restack = st.checkbox("Restack the Predictions for the Meta Model", value=True)
@@ -166,17 +162,15 @@ def write(state):
                                 meta_model = bases[index]
                             else:
                                 meta_model = create_model(all_models[select_model_stack_seconnd])
-                            state.trained_model = stack_models(estimator_list=bases, meta_model=meta_model,
-                                                               fold=fold_ensemble, restack=restack,
-                                                                 choose_better=choose_better_ensemble,
-                                                                 optimize=optimize_ensemble)
-                        state.log_history["create_model"] = pull(True).to_dict()
+                            state.trained_model = stack_models(estimator_list=bases, meta_model=meta_model,fold=fold_ensemble, restack=restack,
+                            choose_better=choose_better_ensemble,optimize=optimize_ensemble)
+                        state.log_history["create_model"] = pull(True)
                 
                 st.markdown('<p style="color:#1386fc">Show All the Metrics Results After Tuning.</p>',unsafe_allow_html=True)       
                 button_after_create = st.button("Show Model Result")
                 if button_after_create:
                     with st.spinner("Show All the Results..."):
-                        st.table(convert_dict_to_df(state.log_history["create_model"]))
+                        AgGrid(state.log_history["create_model"])
    
             state.X_before_preprocess = get_config('data_before_preprocess')
             state.y_before_preprocess = get_config('target_param')

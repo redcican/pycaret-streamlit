@@ -2,7 +2,7 @@ import streamlit as st
 from pages import (home,data_info, reg_preprocessing,prediction, reg_training, 
                    reg_model_analysis,cls_preprocessing,cls_training,cls_model_analysis,
                    cluster_preprocessing,cluster_training,cluster_model_analysis, backward_analysis)
-from utils.session import _get_state
+# from utils.session import _get_state
 from pathlib import Path
 from utils.image_loader import *
 
@@ -20,8 +20,8 @@ PAGES = {
 IMAGE_FOLDER = Path("images/")
 
 def run():
-    state = _get_state()
-    #state = st.session_state
+    # state = _get_state()
+    state = st.session_state
     st.set_page_config(
         page_title="EidoData App",
         page_icon=':shark:',
@@ -37,6 +37,10 @@ def run():
         try:
             state_df,task = PAGES[selection].write(state)
             state.df, state.task = state_df,task
+            
+            state.log_history = {}
+            state.is_remove = False
+            state.ignore_columns = []
         except:
             st.header("Please Upload Csv or Excel File first!")
             st.stop()
@@ -73,7 +77,7 @@ def run():
             PAGES[selection].write(state)
         else:
             st.header("Only Support for Regression Task!")
-    # st.write(state.__dict__)
+
     # state.sync()
 
 if __name__ == '__main__':

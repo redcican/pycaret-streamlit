@@ -19,13 +19,13 @@ def write(state):
         y_train = state.y_train
         y_test = state.y_test
 
-        with st.beta_container():
-            with st.beta_expander("Show Actual vs. Prediction Plot"):
+        with st.container():
+            with st.expander("Show Actual vs. Prediction Plot"):
                 # plot actual vs prediction plot 
                 act_vs_pred_plot = get_plotly_act_vs_predict(model,X_train, X_test, y_train, y_test) 
                 st.plotly_chart(act_vs_pred_plot, use_container_width=True)
             
-            with st.beta_expander("Show Training Performance Plots"):
+            with st.expander("Show Training Performance Plots"):
                 # plot all pycaret support diagrams
                 plot = st.selectbox('Select a Plot', options=['residuals','error','cooks','rfe','learning','vc','manifold'])
                 try:     
@@ -49,8 +49,8 @@ def write(state):
                         options = ['default','bar','violin']
                     else:
                         options=['bar','beeswarm','heatmap']
-                    with st.beta_container():
-                        with st.beta_expander("Interpret the Model with Global SHAP Value"):
+                    with st.container():
+                        with st.expander("Interpret the Model with Global SHAP Value"):
                             plot_type = st.selectbox('Select a Type of Plot', options=options)
                             max_display = st.slider('Maximum Number to Display', min_value=1, max_value=X_train.shape[1],value=10,key=1)
                             try:
@@ -59,7 +59,7 @@ def write(state):
                                 st.error("Plot Not Available for the Model.")    
 
                             
-                        with st.beta_expander("Interpret the Model with Local SHAP Value"):
+                        with st.expander("Interpret the Model with Local SHAP Value"):
                             if model.__class__.__name__ in kernel_regressor: 
                                 max_display_local = None
                             else:

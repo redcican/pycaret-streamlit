@@ -1,6 +1,6 @@
 import streamlit as st
 from utils.retrieve_models_name import retrieve_models_name
-from utils.convert_dict_to_df import convert_dict_to_df
+from st_aggrid import AgGrid
 from pycaret.classification import *
 
 def write(state):
@@ -9,7 +9,7 @@ def write(state):
     if state.is_set_up:
     
         all_models = retrieve_models_name(type="Classification")
-        # st.write(all_models)
+
         select_model = None 
         select_model_names = list(all_models.keys())
         select_model_names.remove('ExtremeGradientBoosting')
@@ -57,7 +57,7 @@ def write(state):
         
         
         st.subheader("Create Model")
-        with st.beta_expander("Select Parameters for Creating Model"):
+        with st.expander("Select Parameters for Creating Model"):
             if not state.is_ensemble:
                 fold_text = st.text_input('Control Cross Validation Folds (int or None)', value='None',key=1)
                 fold = None if fold_text == 'None' else int(fold_text)
@@ -68,7 +68,7 @@ def write(state):
                     if button_create:
                         with st.spinner("Training Model..."):
                             state.trained_model = create_model(estimator=all_models[select_model], fold=fold, cross_validation=cross_validation)
-                        state.log_history["create_model"] = pull(True).to_dict()
+                        state.log_history["create_model"] = pull(True)
                 except:
                     st.error("Please Set Up Dataset first!")           
 
@@ -77,7 +77,7 @@ def write(state):
                 try:
                     if button_after_create:
                         with st.spinner("Show All the Results..."):
-                            st.table(convert_dict_to_df(state.log_history["create_model"]))
+                            AgGrid(state.log_history["create_model"])
                 except:
                     st.error("Please Train a Model first!")
 
@@ -120,7 +120,7 @@ def write(state):
                     button_tuning = st.button("Show Tuning Model Result")
                     if button_tuning:
                         with st.spinner("Show All the Results..."):
-                            st.table(convert_dict_to_df(state.log_history["tuned_models"]))
+                            AgGrid(state.log_history["tuned_models"])
             
             else:
                 fold_ensemble_text = st.text_input('Control Cross Validation Folds (int or None)', value='None',key=3)
@@ -137,7 +137,7 @@ def write(state):
                             state.trained_model = ensemble_model(base, method=select_ensemble_method, fold=fold_ensemble,
                                                                  n_estimators=n_estimators, choose_better=choose_better_ensemble,
                                                                  optimize=optimize_ensemble)
-                        state.log_history["create_model"] = pull(True).to_dict()
+                        state.log_history["create_model"] = pull(True)
 
                 elif ensemble_method == "Blend":
                     bases = []
@@ -150,7 +150,7 @@ def write(state):
                             state.trained_model = blend_models(estimator_list=bases, fold=fold_ensemble,
                                                                  choose_better=choose_better_ensemble,
                                                                  optimize=optimize_ensemble)
-                        state.log_history["create_model"] = pull(True).to_dict()
+                        state.log_history["create_model"] = pull(True)
 
                 else:
                     restack = st.checkbox("Restack the Predictions for the Meta Model", value=True)
@@ -170,7 +170,7 @@ def write(state):
                                                                fold=fold_ensemble, restack=restack,
                                                                  choose_better=choose_better_ensemble,
                                                                  optimize=optimize_ensemble)
-                        state.log_history["create_model"] = pull(True).to_dict()
+                        state.log_history["create_model"] = pull(True)
                 
                 st.markdown('<p style="color:#1386fc">Show All the Metrics Results After Tuning.</p>',unsafe_allow_html=True)       
                 button_after_create = st.button("Show Model Result")

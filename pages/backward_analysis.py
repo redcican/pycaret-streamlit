@@ -5,7 +5,7 @@ from pycaret.regression import predict_model
 from utils.convert_str_to_list import convert_str_to_list
 from utils.plot_regression import gauge_plot,find_top_5_nearest
 from utils.download_button import download_button
-
+from st_aggrid import AgGrid
 
 def write(state):
     if state.trained_model is not None:
@@ -18,9 +18,10 @@ def write(state):
         max_value = X_before_preprocess[target_name].max()
         mean_value = X_before_preprocess[target_name].mean()
         original_value = optimal_value = mean_value 
+        state.optimal_value = 0
 
         st.header("Knowledge Generation and Backward Analysis.")
-        with st.beta_expander("Knowledge Generation"):
+        with st.expander("Knowledge Generation"):
             st.markdown('<p style="color:#1386fc">Please Select a Method to Generate Data.</p>',unsafe_allow_html=True)     
             sdv_method = st.selectbox('Method to Generate Data', options=['GaussianCopula','CTGAN','CopulaGAN','TVAE'])
             sample = st.number_input('How Many Samples of Data to Generate?', min_value =1, value=df_X.shape[0],key=1)
@@ -94,7 +95,7 @@ def write(state):
                     model.fit(df_X)
                     new_data = model.sample(sample)
                     new_data_prediction = predict_model(trained_model,new_data)
-                    st.write(new_data_prediction)
+                    AgGrid(new_data_prediction)
                     state.new_data_prediction = new_data_prediction
                     
             button_download = st.button("Download Generated Data")
@@ -108,14 +109,14 @@ def write(state):
                     st.error("File Name cannot be empty!") 
                 
         st.markdown("---")
-        with st.beta_expander("Backward Analysis"):
-            col1, col2 = st.beta_columns(2)
+        with st.expander("Backward Analysis"):
+            col1, col2 = st.columns(2)
             with col1:
                 st.subheader("Please Select a Index for Data to Optimize")
                 index = st.number_input("Index of Data", min_value=0, value=0,max_value=df_X.shape[0]-1,key=1)
                 st.write(X_before_preprocess.iloc[index])
                 original_value = X_before_preprocess.iloc[index].loc[target_name]
-                # st.write(original_value)
+
             with col2:
                 st.subheader("Optimize")
                 lower_bound = st.number_input("The Lower Bound Value to Optimize",value=min_value)
@@ -131,15 +132,15 @@ def write(state):
                     else:
                         st.error("Please Generate New Data first!")
                 
-        with st.beta_container():
-            state.optimal_value = state.optimal_value if state.optimal_value is not None else 0
+        with st.container():
+            # state.optimal_value = state.optimal_value if state.optimal_value is not None else 0
             fig = gauge_plot(original_value,state.optimal_value,lower_bound,
                              upper_bound,min_value,max_value)
             st.plotly_chart(fig)
             button_suggest = st.button("Show the Top 5 Suggestions")
             if button_suggest:
                 suggestion = state.new_data_prediction.iloc[state.suggest_indices[:5]]
-                st.table(suggestion)
+                AgGrid(suggestion)
     else:
         st.error("Please Train a Model first!")
         

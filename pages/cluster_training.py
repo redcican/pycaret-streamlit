@@ -2,6 +2,7 @@ import streamlit as st
 from utils.retrieve_models_name import retrieve_models_name
 from utils.convert_dict_to_df import convert_dict_to_df
 from pycaret.clustering import *
+from st_aggrid import AgGrid
 
 def write(state):
     st.subheader("Create Model for Unsupervised Learning")
@@ -13,7 +14,7 @@ def write(state):
         select_model = None 
         select_model_names = list(all_models.keys())
         
-        with st.beta_expander("Select Parameters for Creating Model"):
+        with st.expander("Select Parameters for Creating Model"):
             select_model = st.selectbox('Select a Model to Create', options=select_model_names)
             num_clusters = st.number_input('The number of clusters to form', min_value=1, value=4)
             button_create = st.button('Training a Single Model')
@@ -21,7 +22,7 @@ def write(state):
                 if button_create:
                     with st.spinner("Training Model..."):
                         state.trained_model = create_model(model=all_models[select_model], num_clusters=num_clusters)
-                    state.log_history["create_model"] = pull(True).to_dict()
+                    state.log_history["create_model"] = pull(True)
             except:
                 st.error("Please Set Up Dataset first!")   
 
@@ -30,7 +31,7 @@ def write(state):
             try:
                 if button_after_create:
                     with st.spinner("Show All the Results..."):
-                        st.table(convert_dict_to_df(state.log_history["create_model"]))
+                        AgGrid(state.log_history["create_model"])
             except:
                 st.error("Please Train a Model first!")
                 
@@ -72,14 +73,14 @@ def write(state):
                                 state.trained_model = tune_model(model_tune,state.supervised_target, supervised_type,
                                                             supervised_estimator, optimize,fold=fold)
 
-                                state.log_history["tuned_models"] = pull(True).data
+                                state.log_history["tuned_models"] = pull(True)
 
                         st.markdown('<p style="color:#1386fc">Show All the Metrics Results After Tuning.</p>',unsafe_allow_html=True)       
                         button_after_tuning = st.button("Show Tuning Model Result")
                         if button_after_tuning:
                             with st.spinner("Show All the Results..."):
                                 # st.write(convert_dict_to_df(state.log_history["tuned_models"]))
-                                st.table(state.log_history["tuned_models"])
+                                AgGrid(state.log_history["tuned_models"])
                     
                 else:
                     st.error("Please Select a Supervised Target from Data Setup Step!")

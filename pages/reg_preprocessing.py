@@ -1,26 +1,28 @@
 from pycaret.regression import  *
 import streamlit as st
-from utils.convert_dict_to_df import convert_dict_to_df
+from st_aggrid import AgGrid
 
 def write(state):
     # select the target column
     if state.df is not None:
         df = state.df
         
-        columns_name = df.columns.tolist()    
-        with st.beta_container():
+        columns_name = df.columns.tolist()
+        
+        with st.container():
             st.subheader("Select the target variable to make prediction:")
-            target_column = st.selectbox('Target column:',options=columns_name,index=len(columns_name)-1)
+            target_column = st.selectbox('Target column:',options=df.columns,index=len(columns_name)-1)
         
             # select the feature columns
             columns_name.remove(target_column)
             feature_columns = columns_name
             
             # remove the columns ? 
-            is_remove = state.is_remove if state.is_remove is True else False
-            remove_column = st.checkbox('Do you have column(s) to remove?', value=is_remove)
+            # is_remove = False
             
-            ignore_columns = state.ignore_columns if state.ignore_columns is not None else None
+            remove_column = st.checkbox('Do you have column(s) to remove?', value=state.is_remove)
+            
+            ignore_columns = state.ignore_columns
             
             if remove_column:
                 remove_columns = st.multiselect('Select one or more column(s) to remove',feature_columns, default=ignore_columns)
@@ -28,15 +30,16 @@ def write(state):
                 
                 state.is_remove = True
                 state.ignore_columns = remove_columns
+                
         # training and testing split
-        with st.beta_expander("Traning and Testing Split"):
+        with st.expander("Traning and Testing Split"):
             size = st.number_input('Training Size:', value=0.7)
             fold_strategy = st.selectbox('Choice of Cross Validation Strategy',options=['kfold','stratifiedkfold','groupkfold'])
             fold = st.number_input('Number of Folds to be Used in Cross Validation',min_value=2,value=10)
                 
         # Preprocessing
-        with st.beta_expander("Preprocessing"):
-            with st.beta_container():
+        with st.expander("Preprocessing"):
+            with st.container():
                 st.markdown('<p style="color:#1386fc">Preprocessing for Numeric Columns:</p>',unsafe_allow_html=True)
                 numeric_imputation = st.selectbox('Missing Value for Numeric Columns', options=['mean','median'])
                 # select numberical features preprocessing
@@ -75,8 +78,8 @@ def write(state):
                         # fix_imbalance = st.checkbox('Fix Unequal Distribution of Target class', value=False)
                     
         # Feature Engineering
-        with st.beta_expander("Creating New Features through Features Engineering"):
-            with st.beta_container():
+        with st.expander("Creating New Features through Features Engineering"):
+            with st.container():
                 feature_interaction = st.checkbox('Create new Features by Interaction', value=False)
                 feature_ratio = st.checkbox('Create new Features by Calculating Ratios', value=False)
                 
@@ -93,13 +96,12 @@ def write(state):
                 bin_numeric_features = st.checkbox('Create new Features based on Bin Combinations', value=False)
                 select_bin_numeric_features=None
                 if bin_numeric_features:
-                    select_bin_numeric_features = st.multiselect('Select Numeric Features Transformed into Categorical Features using K-Means',
-                                                    feature_columns)
+                    select_bin_numeric_features = st.multiselect('Select Numeric Features Transformed into Categorical Features using K-Means',feature_columns)
                 # bin_numeric_features = bin_numeric_features if len(bin_numeric_features) > 0 else None
                 
         # Feature Selection
-        with st.beta_expander("Select Features in Dataset Contributes the most in Predicting Target Variable"):
-            with st.beta_container():
+        with st.expander("Select Features in Dataset Contributes the most in Predicting Target Variable"):
+            with st.container():
                 feature_selection = st.checkbox('Select a Subset of Features Using a Combination of various Permutation Importance', value=False)
                 feature_selection_threshold = 0.8
                 if feature_selection:
@@ -122,8 +124,8 @@ def write(state):
                 ignore_low_variance = st.checkbox('Remove Categorical Features with Statistically Insignificant Variances', value=False)
                 
         # Unsupervised 
-        with st.beta_expander("Creating Clusters using the Existing Features from the data with Unsupervised Techniques"):
-            with st.beta_container():
+        with st.expander("Creating Clusters using the Existing Features from the data with Unsupervised Techniques"):
+            with st.container():
                 create_clusters = st.checkbox('Create Additioal Features with Clusters', value=False)
                 cluster_iter = 20
                 if create_clusters:
@@ -135,12 +137,12 @@ def write(state):
                     outliers_threshold = st.number_input('The Percentage of Outliers', min_value=0.0, value=0.05)
         
         st.subheader("Start Loading, Preprocessing and Transforma Dataset:")
-        with st.beta_container():          
+        with st.container():          
             button_run = st.button("Start Process and Transform")
             if button_run:
                 with st.spinner("Preprocessing..."):
                     setup(data=df, target=target_column,train_size=size, preprocess=True,
-                          fold_strategy=fold_strategy,fold=fold,
+                    fold_strategy=fold_strategy,fold=int(fold),
                     categorical_imputation=categorical_imputation, numeric_imputation=numeric_imputation,
                     normalize=normalize,normalize_method=normalize_method, transformation=transformation,
                     transformation_method=transformation_method, transform_target=transform_target,
@@ -158,22 +160,27 @@ def write(state):
                     ignore_low_variance=ignore_low_variance,create_clusters=create_clusters,cluster_iter=cluster_iter,
                     remove_outliers=remove_outliers,outliers_threshold=outliers_threshold,html=False,silent=True)
 
-                state.log_history = {"setup":pull(True).data} 
+                #state.log_history= {"setup":pull(True)} 
+                state.log_history["set_up"] = pull(True)
                 # record the setup procedure
                 state.is_set_up = True
+                
+                # set best model to None
+                state.best = None
                 
             st.markdown('<p style="color:#1386fc">Do you want to check Transformed Data?</p>',unsafe_allow_html=True)
             button_transform = st.button("Check Transformed Data")
             try:
                 if button_transform:
                     with st.spinner("Loading..."):
-                        st.table(state.log_history["setup"])
+                        AgGrid(state.log_history["set_up"].data)
+
             except:
                 st.error("Please Process and Transform Data first!")
         
         st.subheader("Compare All the Machine Learning Model Result:")
-        with st.beta_expander("Select Parameters for Comparing Models"):
-            with st.beta_container():
+        with st.expander("Select Parameters for Comparing Models"):
+            with st.container():
                 fold_text = st.text_input('Control Cross Validation Folds (int or None)', value='None')
                 fold_compare = None if fold_text == 'None' else int(fold_text)
 
@@ -186,7 +193,9 @@ def write(state):
             if button_compare:
                 with st.spinner('Comparing all Models...'):
                     state.best = compare_models(exclude=['xgboost'],fold=fold_compare, cross_validation=cross_validation, sort=sort)
-                    state.log_history["compare_models"] = pull(True).to_dict()
+                    
+                    state.log_history["compare_models"] = pull(True)
+                    
         except:
             st.error("Please Process and Transform Data first!")
 
@@ -195,7 +204,7 @@ def write(state):
         try:  
             if button_model:
                 with st.spinner("Show All the Results..."):
-                    st.table(convert_dict_to_df(state.log_history["compare_models"]))
+                    AgGrid(state.log_history["compare_models"])
         except:
             st.error("Please Compare All Models first!")
         

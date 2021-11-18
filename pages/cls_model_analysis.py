@@ -14,13 +14,13 @@ def write(state):
         model = state.trained_model
         task_type = state.classification_task
         X_train = state.X_train
-        X_test = state.X_test
-        y_train = state.y_train
-        y_test = state.y_test
+        # X_test = state.X_test
+        # y_train = state.y_train
+        # y_test = state.y_test
 
-        with st.beta_container():
+        with st.container():
             
-            with st.beta_expander("Show Training Performance Plots"):
+            with st.expander("Show Training Performance Plots"):
                 # plot all pycaret support diagrams
                 plot = st.selectbox('Select a Plot', options=['auc','threshold','pr','confusion_matrix','error',
                                                               'class_report','boundary','rfe','learning','manifold'
@@ -53,8 +53,8 @@ def write(state):
                             options=["bar"]
                         else:
                             options = ['default','bar','violin']
-                    with st.beta_container():
-                        with st.beta_expander("Interpret the Model with Global SHAP Value"):
+                    with st.container():
+                        with st.expander("Interpret the Model with Global SHAP Value"):
                             plot_type = st.selectbox('Select a Type of Plot', options=options)
                             if 'beeswarm' in options:
                                 max_display = st.slider('Maximum Number to Display', min_value=1, max_value=X_train.shape[1],value=10,key=1)
@@ -65,7 +65,7 @@ def write(state):
                             except:
                                 st.error("Plot Not Available for the Model.")    
                                 
-                    with st.beta_expander("Interpret the Model with Local SHAP Value"):
+                    with st.expander("Interpret the Model with Local SHAP Value"):
                         if 'beeswarm' in options:
                             max_display_local = st.slider('Maximum Number to Display', min_value=1, max_value=X_train.shape[1],value=10,key=2)
                         else:

@@ -7,8 +7,8 @@ def write(state):
     if state.trained_model is not None:
         model = state.trained_model
         st.subheader("Analyzing Performance of Trained Machine Learning Model")
-        with st.beta_container():
-            with st.beta_expander("Show Training Performance Plots"):
+        with st.container():
+            with st.expander("Show Training Performance Plots"):
                 plot = st.selectbox('List of available plots', options=['cluster','tsne','elbow','silhouette','distance','distribution'])
                 try:     
                     plot_model(model=model, plot=plot, display_format='streamlit')

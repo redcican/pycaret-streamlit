@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+from st_aggrid import AgGrid
 
 def write(state):
     with st.spinner("Loading Home ..."):
@@ -13,7 +13,8 @@ def write(state):
             else:
                 state.df = pd.read_excel(state)
             st.header("The First 20 Rows of Data")
-            st.table(state.df.head(20))
+            #st.table(state.df.head(20))
+            AgGrid(state.df.head(20))
             
             if state.df is not None:
                 state.task_type=task_type
