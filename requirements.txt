@@ -1,6 +1,7 @@
 pycaret[full]
-streamlit==0.75.0
+streamlit
 streamlit-pandas-profiling
+streamlit-aggrid
 Pillow
 pandas-profiling
 hpbandster
