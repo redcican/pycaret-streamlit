@@ -11,3 +11,4 @@ xlrd
 xlsxwriter
 openpyxl
 sdv
+numba==0.53.0
