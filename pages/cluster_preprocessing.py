@@ -30,7 +30,8 @@ def write(state):
                 if supervised:
                     supervised_target = st.selectbox('Name of Supervised Column',options=feature_columns)
                     state.supervised_target = supervised_target
-        
+                else:
+                    state.supervised_target = None
         # Preprocessing
         with st.expander("Preprocessing"):
             with st.container():
@@ -106,7 +107,7 @@ def write(state):
                     transformation_method=transformation_method,
                     unknown_categorical_method=unknown_categorical_method,
                     combine_rare_levels=combine_rare_levels,rare_level_threshold=rare_level_threshold,
-                    ignore_features=remove_columns,
+                    ignore_features=ignore_columns,
                     group_features=group_features,
                     bin_numeric_features=select_bin_numeric_features,
                     remove_multicollinearity=remove_multicollinearity,

@@ -10,10 +10,13 @@ def write(state):
     
     if state.task == "Regression":
         from pycaret.regression import predict_model, finalize_model,save_model
+        target_name = state.y_before_preprocess
     elif state.task == "Classification":
         from pycaret.classification import predict_model, finalize_model,save_model
+        target_name = state.y_before_preprocess
     else:
         from pycaret.clustering import predict_model,save_model
+        target_name = None
         
     def online_predict(model, input_df,target_type):
         """make prediction on online data
@@ -42,7 +45,7 @@ def write(state):
         )
 
         X_before_preprocess = state.X_before_preprocess
-        target_name = state.y_before_preprocess
+        target_name = target_name
         ignore_columns = state.ignore_columns
         trained_model = state.trained_model      
         
